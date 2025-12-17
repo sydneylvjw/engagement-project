@@ -1,5 +1,7 @@
+// ===== EXTERNAL LIBRARIES =====
 import maplibregl from 'https://cdn.jsdelivr.net/npm/maplibre-gl@3.6.2/+esm';
 
+// ===== VISUAL CONSTANTS =====
 const PRIORITY_COLORS = {
   urgent: '#dc2626',
   high: '#f97316',
@@ -7,12 +9,14 @@ const PRIORITY_COLORS = {
   low: '#0ea5e9',
 };
 
+// ===== USER PROFILE STATE =====
 const CURRENT_USER = {
   id: 'coalition-dispatch',
   name: 'Coalition Dispatcher',
   org: 'Coalition of Care Dispatch',
 };
 
+// ===== PARTNER REGISTRY =====
 const PARTNER_ORGS = [
   'Housing Mutual Aid Network',
   'Community Legal Services',
@@ -21,289 +25,36 @@ const PARTNER_ORGS = [
   'Mutual Aid Logistics Team',
 ];
 
-const reports = [
-  {
-    id: 'R-2031',
-    title: 'No heat, boiler outage',
-    address: '1417 W Girard Ave',
-    councilDistrict: 'District 5',
-    neighborhood: 'Francisville',
-    caseType: 'Utilities',
-    priority: 'urgent',
-    status: 'Needs urgent assistance',
-    responsibility: 'Housing Mutual Aid Network',
-    reportedAt: '2025-10-27T14:32:00Z',
-    lastEngaged: '2025-10-28T09:15:00Z',
-    description:
-      'Tenant collective reported apartment temp below 60°F across multiple floors. Elderly residents requesting temporary heaters.',
-    coordinates: [-75.1612, 39.9726],
-    tags: ['Heating', 'Urgent'],
-    reporter: {
-      name: 'Latoya H.',
-      role: 'Tenant captain',
-      type: 'Community member',
-      submittedAt: '2025-10-27T13:58:00Z',
-      description:
-        'I called because the radiators are ice cold and steam is pouring into the stairwell. Folks are sleeping in coats.',
-    },
-    contactedAnotherAgency: true,
-    contactedAgency: 'Licenses & Inspections emergency line',
-    optionalContact: {
-      name: 'Latoya H.',
-      email: 'latoya.h@neighborsunited.org',
-      phone: '(215) 555-4173',
-    },
-    referredTo: '',
-    collaborators: ['Heating Strike Team'],
-  },
-  {
-    id: 'R-2027',
-    title: 'Water infiltration in stairwell',
-    address: '2230 N 16th St',
-    councilDistrict: 'District 5',
-    neighborhood: 'Sharswood',
-    caseType: 'Maintenance',
-    priority: 'high',
-    status: 'In progress',
-    responsibility: 'Coalition of Care Dispatch',
-    reportedAt: '2025-10-26T21:04:00Z',
-    lastEngaged: '2025-10-28T13:45:00Z',
-    description:
-      'Rain from the weekend entered stairwell and damaged fire-rated doors. Photos indicate mold growth along baseboards.',
-    coordinates: [-75.157, 39.9892],
-    tags: ['Mold watch'],
-    reporter: {
-      name: 'Devon R.',
-      role: 'Resident organizer',
-      type: 'Community member',
-      submittedAt: '2025-10-26T18:40:00Z',
-      description:
-        'I saw water leaking in from the rain and it is running down the stairs. The doors are warped and smell like mold.',
-    },
-    contactedAnotherAgency: false,
-    contactedAgency: '',
-    optionalContact: {
-      name: 'Devon R.',
-      email: 'devon.r@mutualaid.org',
-      phone: '(267) 555-8094',
-    },
-    referredTo: '',
-    collaborators: ['Building Stewards', 'Legal Hotline'],
-  },
-  {
-    id: 'R-2025',
-    title: 'Uncollected trash blocking egress',
-    address: '501 W Norris St',
-    councilDistrict: 'District 7',
-    neighborhood: 'Ludlow',
-    caseType: 'Solid waste',
-    priority: 'medium',
-    status: 'Under review',
-    responsibility: 'Unassigned',
-    reportedAt: '2025-10-25T15:20:00Z',
-    lastEngaged: '2025-10-27T10:22:00Z',
-    description:
-      'Mutual aid partner noted overflowing dumpsters and rodents. Coalition coordinating with sanitation nonprofit for removal.',
-    coordinates: [-75.1407, 39.9814],
-    tags: ['Sanitation'],
-    reporter: {
-      name: 'Marcus T.',
-      role: 'Block captain',
-      type: 'Community member',
-      submittedAt: '2025-10-25T12:05:00Z',
-      description:
-        'Their yard is full of garbage and making the neighborhood look bad. Kids have to walk in the street.',
-    },
-    contactedAnotherAgency: true,
-    contactedAgency: 'Sanitation 311 intake',
-    optionalContact: {
-      name: 'Marcus T.',
-      email: 'marcus.t@blockcaptains.org',
-      phone: '(215) 555-1120',
-    },
-    referredTo: '',
-    collaborators: ['Neighborhood Sanitation Crew'],
-  },
-  {
-    id: 'R-2022',
-    title: 'Locked emergency exits',
-    address: '722 Tasker St',
-    councilDistrict: 'District 1',
-    neighborhood: 'Passyunk Square',
-    caseType: 'Life safety',
-    priority: 'high',
-    status: 'Referred',
-    responsibility: 'Neighborhood Safety Desk',
-    reportedAt: '2025-10-24T18:30:00Z',
-    lastEngaged: '2025-10-28T08:07:00Z',
-    description:
-      'Residents documented chained rear exit doors. Coalition counsel preparing notice to landlord and city safety office.',
-    coordinates: [-75.1575, 39.9298],
-    tags: ['Fire watch'],
-    reporter: {
-      name: 'Nicole T.',
-      role: 'Parent volunteer',
-      type: 'Community member',
-      submittedAt: '2025-10-24T16:12:00Z',
-      description:
-        'The exit doors are chained shut every night. If there is a fire we cannot get out with the kids.',
-    },
-    contactedAnotherAgency: false,
-    contactedAgency: '',
-    optionalContact: {
-      name: 'Nicole T.',
-      email: 'nicole.torres@gmail.com',
-      phone: '(267) 555-2240',
-    },
-    referredTo: 'Coalition of Care Dispatch',
-    collaborators: ['Fire Safety Advocates'],
-  },
-  {
-    id: 'R-2019',
-    title: 'Lead paint chipping',
-    address: '1816 Dickinson St',
-    councilDistrict: 'District 2',
-    neighborhood: 'Point Breeze',
-    caseType: 'Health',
-    priority: 'medium',
-    status: 'Needs follow up',
-    responsibility: 'Tenant Health Collective',
-    reportedAt: '2025-10-23T12:55:00Z',
-    lastEngaged: '2025-10-27T16:12:00Z',
-    description:
-      'Family with toddlers observed paint chips throughout windowsills. Coalition nurse scheduled for follow-up on-site.',
-    coordinates: [-75.1756, 39.9344],
-    tags: ['Lead'],
-    reporter: {
-      name: 'Shawnice B.',
-      role: 'Parent',
-      type: 'Community member',
-      submittedAt: '2025-10-23T11:45:00Z',
-      description:
-        'Paint is peeling off the windows and we keep sweeping up chips. My toddler has dust on her toys.',
-    },
-    contactedAnotherAgency: true,
-    contactedAgency: 'Department of Public Health hotline',
-    optionalContact: {
-      name: 'Shawnice B.',
-      email: 'shawniceb@gmail.com',
-      phone: '(215) 555-7421',
-    },
-    referredTo: '',
-    collaborators: ['Health Desk Liaisons'],
-  },
-];
+// ===== DATA SOURCING =====
+const DATA_URL = 'data/mockReports.json';
 
-reports.forEach((report) => {
-  if (!Array.isArray(report.tags)) report.tags = [];
-  if (!Array.isArray(report.collaborators)) report.collaborators = [];
-  report.referredTo = report.referredTo ?? '';
-});
-
-const SEED_ENGAGEMENT = {
-  'R-2031': {
-    comments: [
-      {
-        id: 'c-r-2031-1',
-        author: 'Tenant captain A. Lewis',
-        text: 'Shared photos of the boilers with the housing collective. Waiting on vendor ETA.',
-        createdAt: '2025-10-28T21:10:00Z',
-      },
-    ],
-    notes: [
-      {
-        id: 'n-r-2031-1',
-        author: 'Coalition dispatcher',
-        text: 'Need to confirm heater delivery schedule before 6 p.m. curfew.',
-        createdAt: '2025-10-28T22:45:00Z',
-      },
-    ],
-  },
-  'R-2027': {
-    comments: [
-      {
-        id: 'c-r-2027-1',
-        author: 'Sharswood safety team',
-        text: 'Residents ready to help tarp stairwell tonight if supplies arrive.',
-        createdAt: '2025-10-28T17:05:00Z',
-      },
-    ],
-    notes: [
-      {
-        id: 'n-r-2027-1',
-        author: 'Legal triage',
-        text: 'Prepping notice for landlord citing safety violations.',
-        createdAt: '2025-10-28T18:15:00Z',
-      },
-    ],
-  },
-  'R-2025': {
-    comments: [
-      {
-        id: 'c-r-2025-1',
-        author: 'North Philly Cleaners',
-        text: 'Volunteers can do a trash pickup Saturday morning.',
-        createdAt: '2025-10-27T14:30:00Z',
-      },
-    ],
-    notes: [
-      {
-        id: 'n-r-2025-1',
-        author: 'Operations desk',
-        text: 'Coordinate with sanitation nonprofit for bins/hauling.',
-        createdAt: '2025-10-27T15:10:00Z',
-      },
-    ],
-  },
-  'R-2022': {
-    comments: [
-      {
-        id: 'c-r-2022-1',
-        author: 'Block captain N. Torres',
-        text: 'Parents are documenting exit doors nightly for escalation.',
-        createdAt: '2025-10-28T12:50:00Z',
-      },
-    ],
-    notes: [
-      {
-        id: 'n-r-2022-1',
-        author: 'Safety counsel',
-        text: 'Drafted letter to landlord. Need signatures from residents.',
-        createdAt: '2025-10-28T13:05:00Z',
-      },
-    ],
-  },
-  'R-2019': {
-    comments: [
-      {
-        id: 'c-r-2019-1',
-        author: 'Point Breeze health team',
-        text: 'Family requested dust masks for weekend cleaning.',
-        createdAt: '2025-10-27T20:00:00Z',
-      },
-    ],
-    notes: [
-      {
-        id: 'n-r-2019-1',
-        author: 'Health desk',
-        text: 'Nurse visit scheduled for Friday morning. Bring lead test kits.',
-        createdAt: '2025-10-27T21:35:00Z',
-      },
-    ],
-  },
+// ===== IN-MEMORY STATE =====
+let reports = [];
+const filters = {
+  priority: 'all',
+  status: 'all',
+  responsibility: 'all',
 };
+let activeUser = { ...CURRENT_USER };
 
+const SEED_ENGAGEMENT = {};
+
+// ===== STORAGE IDENTIFIERS =====
 const STORAGE_KEY = 'flicr-engagement-v1';
 const CASE_STATE_KEY = 'flicr-case-state-v1';
 const CAN_USE_STORAGE =
   typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 const engagementState = loadEngagementState();
 const caseState = loadCaseState();
-applyCaseStateOverrides();
 
 let selectedCase = null;
 let commentReplyTarget = null;
 
+// ===== DOM REFERENCES =====
+const filterPriority = document.getElementById('filter-priority');
+const filterStatus = document.getElementById('filter-status');
+const filterResponsibility = document.getElementById('filter-responsibility');
+const filterResetBtn = document.getElementById('filter-reset');
 const recentList = document.getElementById('recent-list');
 const activityList = document.getElementById('activity-list');
 const casePanel = document.getElementById('case-panel');
@@ -324,7 +75,11 @@ const noteField = document.getElementById('note-text');
 const notePermissions = document.getElementById('note-permissions');
 const commentColumn = document.getElementById('comments-column');
 const notesColumn = document.getElementById('notes-column');
+const authToggle = document.getElementById('auth-toggle');
+const userNameEl = document.getElementById('user-name');
+const userOrgEl = document.getElementById('user-org');
 
+// ===== CASE SUMMARY FIELDS =====
 const caseSummaryFields = {
   status: document.getElementById('case-status'),
   title: document.getElementById('case-title'),
@@ -333,12 +88,14 @@ const caseSummaryFields = {
   responsibility: document.getElementById('case-responsibility-summary'),
 };
 
+// ===== CASE HEADER FIELDS =====
 const caseHeaderFields = {
   status: document.getElementById('case-status-detail'),
   title: document.getElementById('case-title-detail'),
   address: document.getElementById('case-address-detail'),
 };
 
+// ===== CASE META FIELDS =====
 const caseMetaFields = {
   id: document.getElementById('case-id'),
   description: document.getElementById('case-description'),
@@ -351,6 +108,7 @@ const caseMetaFields = {
 };
 const reporterDescriptionEl = document.getElementById('reporter-description');
 
+// ===== MAPLIVRE CONFIG =====
 let mapReady = false;
 const map = new maplibregl.Map({
   container: 'locator-map',
@@ -402,6 +160,7 @@ map.on('load', () => {
   map.on('mouseleave', 'cases-layer', () => (map.getCanvas().style.cursor = ''));
 });
 
+// ===== EVENT WIRING =====
 closeCaseBtn.addEventListener('click', () => closeCasePanel());
 commentForm.addEventListener('submit', handleCommentSubmit);
 noteForm.addEventListener('submit', handleNoteSubmit);
@@ -409,16 +168,71 @@ cancelReplyBtn.addEventListener('click', () => clearReplyTarget());
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') closeCasePanel();
 });
+filterPriority.addEventListener('change', () => updateFilters('priority', filterPriority.value));
+filterStatus.addEventListener('change', () => updateFilters('status', filterStatus.value));
+filterResponsibility.addEventListener('change', () =>
+  updateFilters('responsibility', filterResponsibility.value),
+);
+filterResetBtn.addEventListener('click', resetFilters);
+authToggle.addEventListener('click', toggleAuthentication);
 
-renderLists();
-
-function renderLists() {
-  renderReportList(recentList, sortReportsBy('reportedAt'), 'reportedAt');
-  renderReportList(activityList, sortReportsBy('lastEngaged'), 'lastEngaged');
+// ===== APP INIT =====
+async function init() {
+  updateAuthUI();
+  await loadReports();
 }
 
+// ===== DATA FETCH =====
+async function loadReports() {
+  try {
+    const response = await fetch(DATA_URL);
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    const dataset = await response.json();
+    const transformed = (dataset.reports ?? []).map(transformReport);
+    setReports(transformed);
+  } catch (error) {
+    console.error('Unable to load reports dataset', error);
+  }
+}
+
+init();
+
+// ===== STATE HYDRATION =====
+function setReports(data) {
+  reports = data;
+  applyCaseStateOverrides();
+  bootstrapEngagementSeeds(data);
+  populateFilterControls(data);
+  renderLists();
+  if (selectedCase) {
+    const latest = reports.find((report) => report.id === selectedCase.id);
+    if (latest) {
+      selectedCase = latest;
+      renderCasePanel(latest);
+    }
+  }
+}
+
+// ===== LIST RENDERING =====
+function renderLists() {
+  const scopedReports = getFilteredReports();
+  renderReportList(recentList, sortReportsBy(scopedReports, 'reportedAt'), 'reportedAt');
+  renderReportList(activityList, sortReportsBy(scopedReports, 'lastEngaged'), 'lastEngaged');
+  refreshMapSource(scopedReports);
+}
+
+// ===== LIST ITEM BUILDER =====
 function renderReportList(listEl, items, dateField) {
   listEl.innerHTML = '';
+  if (!items.length) {
+    const empty = document.createElement('li');
+    empty.className = 'report-empty';
+    empty.textContent = 'No reports match the current filters.';
+    listEl.appendChild(empty);
+    return;
+  }
   items.forEach((report) => {
     const li = document.createElement('li');
     const button = document.createElement('button');
@@ -431,6 +245,66 @@ function renderReportList(listEl, items, dateField) {
   });
 }
 
+// ===== FILTERING UTILITIES =====
+function getFilteredReports() {
+  return reports.filter((report) => {
+    if (filters.priority !== 'all' && report.priority !== filters.priority) return false;
+    if (filters.status !== 'all' && report.status !== filters.status) return false;
+    if (
+      filters.responsibility !== 'all' &&
+      getResponsibilityLabel(report) !== filters.responsibility
+    ) {
+      return false;
+    }
+    return true;
+  });
+}
+
+function updateFilters(key, value) {
+  filters[key] = value;
+  renderLists();
+}
+
+function resetFilters() {
+  filters.priority = 'all';
+  filters.status = 'all';
+  filters.responsibility = 'all';
+  filterPriority.value = 'all';
+  filterStatus.value = 'all';
+  filterResponsibility.value = 'all';
+  renderLists();
+}
+
+function populateFilterControls(data) {
+  populateSelect(filterPriority, getUniqueValues(data.map((report) => report.priority)));
+  populateSelect(filterStatus, getUniqueValues(data.map((report) => report.status)));
+  populateSelect(
+    filterResponsibility,
+    getUniqueValues(data.map((report) => getResponsibilityLabel(report))),
+  );
+}
+
+function populateSelect(selectEl, values) {
+  if (!selectEl) return;
+  const currentValue = selectEl.value;
+  selectEl.innerHTML = '<option value="all">All</option>';
+  values.forEach((value) => {
+    if (!value) return;
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    selectEl.appendChild(option);
+  });
+  if (currentValue && Array.from(selectEl.options).some((opt) => opt.value === currentValue)) {
+    selectEl.value = currentValue;
+  }
+}
+
+function getUniqueValues(list) {
+  return [...new Set(list.filter(Boolean))].sort((a, b) => a.localeCompare(b));
+}
+
+// ===== REPORT ROW MARKUP =====
 function buildReportRowMarkup(report, dateField) {
   const priorityPill = `<span class="priority-pill priority-pill--${report.priority}">${report.priority.toUpperCase()} PRIORITY</span>`;
   const statusPill = formatStatusPill(report.status);
@@ -445,16 +319,19 @@ function buildReportRowMarkup(report, dateField) {
       <span>${report.address}</span>
       <span>${responsibility}</span>
     </div>
+    <p class="report-row__hint">Select to inspect case details</p>
     <div class="report-row__badges">${badge}</div>
   `;
 }
 
+// ===== CASE FOCUS HANDLER =====
 function focusOnReport(report) {
   selectedCase = report;
   renderCasePanel(report);
   highlightMap(report);
 }
 
+// ===== CASE PANEL RENDER =====
 function renderCasePanel(report) {
   updateSummary(report);
   updateCaseHeader(report);
@@ -475,6 +352,7 @@ function renderCasePanel(report) {
   casePanel.classList.remove('hidden');
 }
 
+// ===== SUMMARY WRITER =====
 function updateSummary(report) {
   caseSummaryFields.status.textContent = report.status;
   caseSummaryFields.title.textContent = report.title;
@@ -483,12 +361,14 @@ function updateSummary(report) {
   caseSummaryFields.responsibility.textContent = getResponsibilityLabel(report);
 }
 
+// ===== HEADER WRITER =====
 function updateCaseHeader(report) {
   caseHeaderFields.status.textContent = report.status;
   caseHeaderFields.title.textContent = report.title;
   caseHeaderFields.address.textContent = formatCaseAddress(report);
 }
 
+// ===== TAG RENDERER =====
 function renderTags(report) {
   caseTagsContainer.innerHTML = '';
   const tags = report.tags ?? [];
@@ -504,6 +384,7 @@ function renderTags(report) {
   });
 }
 
+// ===== COLLAB RENDERER =====
 function renderCollaborators(report) {
   collaboratorsList.innerHTML = '';
   const collaborators = report.collaborators ?? [];
@@ -522,6 +403,7 @@ function renderCollaborators(report) {
   });
 }
 
+// ===== THREAD RENDERER =====
 function renderThreads(report) {
   const threads = getCaseThreads(report.id);
   const ownsCase = isCaseOwner(report);
@@ -544,18 +426,33 @@ function renderThreads(report) {
   notesColumn.classList.toggle('notes-readonly', !ownsCase);
   notePermissions.classList.toggle('is-hidden', ownsCase);
   if (!ownsCase) {
-    notePermissions.textContent = 'Only case owners can capture internal notes.';
+    notePermissions.textContent = activeUser
+      ? 'Only case owners can capture internal notes.'
+      : 'Log in to capture internal notes.';
     noteField.value = '';
   } else {
     notePermissions.textContent = '';
   }
 }
 
+// ===== ACTION CENTER RENDER =====
 function renderCaseActions(report) {
   caseActionsBody.innerHTML = '';
+  if (!report) {
+    caseActionsBody.innerHTML =
+      '<p class="case-action-hint">Select a case to see engagement options.</p>';
+    return;
+  }
+  if (!activeUser) {
+    caseActionsBody.innerHTML =
+      '<p class="case-action-hint">Log in to assign, refer, or tag coalition partners.</p>';
+    return;
+  }
   const isOwner = isCaseOwner(report);
   const isUnassigned = isCaseUnassigned(report);
-  const referredToYou = Boolean(report.referredTo && report.referredTo === CURRENT_USER.org);
+  const referredToYou = Boolean(
+    report.referredTo && activeUser && report.referredTo === activeUser.org,
+  );
 
   if (isOwner) {
     caseActionsBody.appendChild(buildReferCard(report));
@@ -577,6 +474,7 @@ function renderCaseActions(report) {
   }
 }
 
+// ===== ACTION CARD FACTORY =====
 function createActionCard(title, description) {
   const card = document.createElement('div');
   card.className = 'action-card';
@@ -588,6 +486,7 @@ function createActionCard(title, description) {
   return card;
 }
 
+// ===== REFER CARD =====
 function buildReferCard(report) {
   const card = createActionCard('Refer to partner', 'Route this case to a trusted organization.');
   const select = document.createElement('select');
@@ -613,6 +512,7 @@ function buildReferCard(report) {
   return card;
 }
 
+// ===== CLOSE CARD =====
 function buildCloseCard(report) {
   const card = createActionCard('Mark as closed', 'Wrap up when the coalition confirms resolution.');
   const button = document.createElement('button');
@@ -624,6 +524,7 @@ function buildCloseCard(report) {
   return card;
 }
 
+// ===== TAG CARD =====
 function buildTagCard(report) {
   const card = createActionCard('Tag collaborators', 'Notify partners who should track this case.');
   const input = document.createElement('input');
@@ -643,8 +544,10 @@ function buildTagCard(report) {
   return card;
 }
 
+// ===== OWNERSHIP CARD =====
 function buildTakeOwnershipCard(report) {
-  const card = createActionCard('Take responsibility', 'Claim this case for the Coalition of Care Dispatch.');
+  const orgLabel = activeUser?.org ?? 'Coalition of Care Dispatch';
+  const card = createActionCard('Take responsibility', `Claim this case for ${orgLabel}.`);
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'primary-btn';
@@ -654,6 +557,7 @@ function buildTakeOwnershipCard(report) {
   return card;
 }
 
+// ===== COMMENT CTA CARD =====
 function buildFocusCommentCard() {
   const card = createActionCard('Leave a comment', 'Share observations with the current case owner.');
   const button = document.createElement('button');
@@ -668,6 +572,7 @@ function buildFocusCommentCard() {
   return card;
 }
 
+// ===== COLLAB REQUEST CARD =====
 function buildCollaborationCard(report) {
   const card = createActionCard('Request collaboration', 'Ask the owner to add you to this case.');
   const button = document.createElement('button');
@@ -679,6 +584,7 @@ function buildCollaborationCard(report) {
   return card;
 }
 
+// ===== ASSIGNMENT REQUEST CARD =====
 function buildAssignmentRequestCard(report) {
   const card = createActionCard('Request to assume case', 'Offer to become the lead for this report.');
   const button = document.createElement('button');
@@ -690,8 +596,10 @@ function buildAssignmentRequestCard(report) {
   return card;
 }
 
+// ===== ACCEPT REFERRAL CARD =====
 function buildAcceptReferralCard(report) {
-  const card = createActionCard('Accept referral', `This case was referred to ${CURRENT_USER.org}.`);
+  const orgLabel = activeUser?.org ?? 'your team';
+  const card = createActionCard('Accept referral', `This case was referred to ${orgLabel}.`);
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'primary-btn';
@@ -701,6 +609,7 @@ function buildAcceptReferralCard(report) {
   return card;
 }
 
+// ===== REFER ACTION =====
 function referCaseToPartner(report, partner) {
   updateCase(report, { referredTo: partner, status: 'Referred' });
   addThreadEntry(
@@ -711,11 +620,13 @@ function referCaseToPartner(report, partner) {
   );
 }
 
+// ===== CLOSE ACTION =====
 function markCaseClosed(report) {
   updateCase(report, { status: 'Closed', referredTo: '' });
   addThreadEntry(report.id, 'notes', 'Marked case as closed for coalition tracking.', getCurrentUserLabel(report));
 }
 
+// ===== TAG ACTION =====
 function tagCollaborator(report, collaborator) {
   report.collaborators = report.collaborators ?? [];
   if (report.collaborators.includes(collaborator)) return;
@@ -723,11 +634,14 @@ function tagCollaborator(report, collaborator) {
   updateCase(report, { collaborators: updated }, { touch: false });
 }
 
+// ===== OWNERSHIP ACTION =====
 function takeCaseOwnership(report) {
-  updateCase(report, { responsibility: CURRENT_USER.org, referredTo: '' });
+  if (!activeUser) return;
+  updateCase(report, { responsibility: activeUser.org, referredTo: '' });
   addThreadEntry(report.id, 'notes', 'Took ownership of this case.', getCurrentUserLabel(report));
 }
 
+// ===== REQUEST COLLAB ACTION =====
 function requestCollaboration(report) {
   addThreadEntry(
     report.id,
@@ -737,6 +651,7 @@ function requestCollaboration(report) {
   );
 }
 
+// ===== REQUEST OWNERSHIP ACTION =====
 function requestAssignment(report) {
   addThreadEntry(
     report.id,
@@ -746,8 +661,10 @@ function requestAssignment(report) {
   );
 }
 
+// ===== ACCEPT REFERRAL ACTION =====
 function acceptReferral(report) {
-  updateCase(report, { responsibility: CURRENT_USER.org, referredTo: '', status: 'In progress' });
+  if (!activeUser) return;
+  updateCase(report, { responsibility: activeUser.org, referredTo: '', status: 'In progress' });
   addThreadEntry(
     report.id,
     'comments',
@@ -756,6 +673,7 @@ function acceptReferral(report) {
   );
 }
 
+// ===== COMMENT FORM HANDLER =====
 function handleCommentSubmit(event) {
   event.preventDefault();
   if (!selectedCase) return;
@@ -772,6 +690,7 @@ function handleCommentSubmit(event) {
   clearReplyTarget();
 }
 
+// ===== NOTE FORM HANDLER =====
 function handleNoteSubmit(event) {
   event.preventDefault();
   if (!selectedCase) return;
@@ -782,6 +701,7 @@ function handleNoteSubmit(event) {
   noteField.value = '';
 }
 
+// ===== PANEL CLOSE ACTION =====
 function closeCasePanel() {
   selectedCase = null;
   clearReplyTarget();
@@ -791,6 +711,7 @@ function closeCasePanel() {
   }
 }
 
+// ===== MAP HIGHLIGHT =====
 function highlightMap(report) {
   if (!map.getSource('cases')) return;
   map.resize();
@@ -803,26 +724,31 @@ function highlightMap(report) {
   ]);
 }
 
-function sortReportsBy(field) {
-  return [...reports].sort((a, b) => new Date(b[field]) - new Date(a[field]));
+// ===== SORT UTILITY =====
+function sortReportsBy(items, field) {
+  return [...items].sort((a, b) => new Date(b[field]) - new Date(a[field]));
 }
 
+// ===== ADDRESS LABEL =====
 function formatCaseAddress(report) {
   return `${report.address} · ${report.councilDistrict}`;
 }
 
+// ===== RESPONSIBILITY LABEL =====
 function getResponsibilityLabel(report) {
   return report.responsibility && report.responsibility !== 'Unassigned'
     ? report.responsibility
     : 'Unassigned';
 }
 
+// ===== STATUS PILL BUILDER =====
 function formatStatusPill(status) {
   if (!status) return '';
   const slug = status.toLowerCase().replace(/\s+/g, '-');
   return `<span class="status-pill status-pill--${slug}">${status.toUpperCase()}</span>`;
 }
 
+// ===== ABSOLUTE DATE FORMATTER =====
 function formatAbsoluteDate(isoString) {
   const date = new Date(isoString);
   return new Intl.DateTimeFormat('en-US', {
@@ -834,6 +760,7 @@ function formatAbsoluteDate(isoString) {
   }).format(date);
 }
 
+// ===== RELATIVE DATE FORMATTER =====
 function formatRelativeDate(isoString) {
   const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
   const target = new Date(isoString);
@@ -846,6 +773,7 @@ function formatRelativeDate(isoString) {
   return formatter.format(diffDays, 'day');
 }
 
+// ===== GEOJSON TRANSFORM =====
 function toGeoJSON(items) {
   return {
     type: 'FeatureCollection',
@@ -863,12 +791,14 @@ function toGeoJSON(items) {
   };
 }
 
-function refreshMapSource() {
+// ===== MAP SOURCE REFRESH =====
+function refreshMapSource(data = getFilteredReports()) {
   if (mapReady && map.getSource('cases')) {
-    map.getSource('cases').setData(toGeoJSON(reports));
+    map.getSource('cases').setData(toGeoJSON(data));
   }
 }
 
+// ===== THREAD STATE ACCESS =====
 function getCaseThreads(caseId) {
   if (!engagementState[caseId]) {
     engagementState[caseId] = { comments: [], notes: [] };
@@ -876,6 +806,7 @@ function getCaseThreads(caseId) {
   return engagementState[caseId];
 }
 
+// ===== THREAD ITEM BUILDER =====
 function renderThreadItems(listEl, entries, type, options = {}) {
   listEl.innerHTML = '';
   if (!entries.length) {
@@ -929,6 +860,7 @@ function renderThreadItems(listEl, entries, type, options = {}) {
   });
 }
 
+// ===== THREAD ADDITION =====
 function addThreadEntry(caseId, threadType, text, author, options = {}) {
   const threads = getCaseThreads(caseId);
   const bucket = threads[threadType];
@@ -953,6 +885,7 @@ function addThreadEntry(caseId, threadType, text, author, options = {}) {
   }
 }
 
+// ===== REPLY TARGET SETTER =====
 function setReplyTarget(report, entry) {
   if (!isCaseOwner(report)) return;
   commentReplyTarget = { reportId: report.id, entry };
@@ -963,6 +896,7 @@ function setReplyTarget(report, entry) {
   commentField.focus();
 }
 
+// ===== REPLY TARGET CLEAR =====
 function clearReplyTarget() {
   commentReplyTarget = null;
   replyHint.textContent = '';
@@ -971,6 +905,7 @@ function clearReplyTarget() {
   commentField.placeholder = 'Leave a comment';
 }
 
+// ===== THREAD COUNT LABEL =====
 function formatThreadCount(count, noun, emptyLabel = 'No entries yet') {
   if (!count) {
     return emptyLabel;
@@ -979,6 +914,7 @@ function formatThreadCount(count, noun, emptyLabel = 'No entries yet') {
   return `${count} ${noun}${needsPlural ? 's' : ''}`;
 }
 
+// ===== THREAD TIMESTAMP LABEL =====
 function formatThreadTimestamp(isoString) {
   const date = new Date(isoString);
   const diffMs = Date.now() - date.getTime();
@@ -998,6 +934,7 @@ function formatThreadTimestamp(isoString) {
   }).format(date);
 }
 
+// ===== REPORTER DESCRIPTION BUILDER =====
 function formatReporterDescription(report) {
   if (!report.reporter) return 'Reporter details unavailable.';
   const { description, submittedAt, name, type } = report.reporter;
@@ -1006,37 +943,43 @@ function formatReporterDescription(report) {
   return `${date} — ${description} (${attribution})`;
 }
 
+// ===== REPORTER META BUILDER =====
 function formatReporterMeta(report) {
   if (!report.reporter) return 'Not provided';
   const { name, role, type } = report.reporter;
   return [name, role ?? type].filter(Boolean).join(' · ');
 }
 
+// ===== CONTACTED AGENCY LABEL =====
 function formatContactedAgency(report) {
   if (!report.contactedAnotherAgency) return 'None reported';
   return report.contactedAgency || 'Another agency notified';
 }
 
+// ===== OPTIONAL CONTACT LABEL =====
 function formatOptionalContact(report) {
   if (!report.optionalContact) return 'Not on file';
   const { name, phone, email } = report.optionalContact;
   return [name, phone, email].filter(Boolean).join(' • ');
 }
 
+// ===== USER LABEL =====
 function getCurrentUserLabel(report) {
-  return isCaseOwner(report)
-    ? `${CURRENT_USER.name} (${CURRENT_USER.org})`
-    : CURRENT_USER.name;
+  if (!activeUser) return 'Guest contributor';
+  return isCaseOwner(report) ? `${activeUser.name} (${activeUser.org})` : activeUser.name;
 }
 
+// ===== OWNERSHIP CHECK =====
 function isCaseOwner(report) {
-  return report.responsibility === CURRENT_USER.org;
+  return Boolean(activeUser) && report.responsibility === activeUser.org;
 }
 
+// ===== UNASSIGNED CHECK =====
 function isCaseUnassigned(report) {
   return !report.responsibility || report.responsibility === 'Unassigned';
 }
 
+// ===== CASE UPDATE PIPELINE =====
 function updateCase(report, updates = {}, options = {}) {
   const mergedUpdates = { ...updates };
   if (options.touch !== false) {
@@ -1051,6 +994,7 @@ function updateCase(report, updates = {}, options = {}) {
   }
 }
 
+// ===== CASE STATE PERSIST =====
 function persistCaseUpdate(caseId, updates) {
   const record = caseState[caseId] ?? {};
   Object.entries(updates).forEach(([key, value]) => {
@@ -1060,6 +1004,7 @@ function persistCaseUpdate(caseId, updates) {
   saveCaseState();
 }
 
+// ===== ENGAGEMENT LOAD =====
 function loadEngagementState() {
   if (!CAN_USE_STORAGE) {
     return JSON.parse(JSON.stringify(SEED_ENGAGEMENT));
@@ -1075,6 +1020,7 @@ function loadEngagementState() {
   return JSON.parse(JSON.stringify(SEED_ENGAGEMENT));
 }
 
+// ===== ENGAGEMENT SAVE =====
 function saveEngagementState() {
   if (!CAN_USE_STORAGE) {
     return;
@@ -1086,6 +1032,7 @@ function saveEngagementState() {
   }
 }
 
+// ===== CASE STATE LOAD =====
 function loadCaseState() {
   if (!CAN_USE_STORAGE) {
     return {};
@@ -1099,6 +1046,7 @@ function loadCaseState() {
   }
 }
 
+// ===== CASE STATE SAVE =====
 function saveCaseState() {
   if (!CAN_USE_STORAGE) return;
   try {
@@ -1108,6 +1056,7 @@ function saveCaseState() {
   }
 }
 
+// ===== APPLY CASE OVERRIDES =====
 function applyCaseStateOverrides() {
   reports.forEach((report) => {
     const stored = caseState[report.id];
@@ -1116,4 +1065,116 @@ function applyCaseStateOverrides() {
       report[key] = Array.isArray(value) ? [...value] : value;
     });
   });
+}
+
+// ===== ENGAGEMENT SEEDER =====
+function bootstrapEngagementSeeds(reportList) {
+  if (!CAN_USE_STORAGE) return;
+  if (Object.keys(engagementState).length) return;
+  reportList.slice(0, 3).forEach((report, index) => {
+    engagementState[report.id] = {
+      comments: [
+        {
+          id: `seed-comment-${report.id}`,
+          author: `${report.neighborhood} neighbor`,
+          text: `Checking in on the ${report.caseFocus?.toLowerCase() ?? 'reported issue'}.`,
+          createdAt: new Date(Date.now() - (index + 2) * 60 * 60 * 1000).toISOString(),
+        },
+      ],
+      notes: [
+        {
+          id: `seed-note-${report.id}`,
+          author: 'Coalition dispatcher',
+          text: `Coordinating response plan for ${report.caseFocus?.toLowerCase() ?? 'this case'}.`,
+          createdAt: new Date(Date.now() - (index + 1) * 45 * 60 * 1000).toISOString(),
+        },
+      ],
+    };
+  });
+  saveEngagementState();
+}
+
+// ===== REPORT TRANSFORMER =====
+function transformReport(record) {
+  const focus = record.casePriority?.focus ?? 'Community concern';
+  const description =
+    record.notes ||
+    `Community partners flagged ${focus.toLowerCase()} at ${record.location?.address ?? 'this site'}.`;
+  return {
+    id: record.id,
+    title: buildCaseTitle(record, focus),
+    address: record.location?.address ?? 'Unspecified address',
+    councilDistrict: record.location?.councilDistrict ?? 'District',
+    neighborhood: record.location?.neighborhood ?? 'Philadelphia',
+    caseType: record.caseType ?? 'Case',
+    priority: record.casePriority?.level ?? 'medium',
+    status: formatStatusLabel(record.status),
+    responsibility: determineResponsibility(record),
+    reportedAt: record.createdAt,
+    lastEngaged: record.lastEngaged ?? record.createdAt,
+    description,
+    coordinates: record.location?.coordinates ?? [-75.1635, 39.9526],
+    tags: focus ? [focus] : [],
+    reporter: {
+      name: record.optionalContact?.name ?? 'Community reporter',
+      role: record.optionalContact ? 'Resident contact' : 'Hotline submission',
+      type: record.optionalContact ? 'Community member' : 'Anonymous',
+      submittedAt: record.createdAt,
+      description,
+    },
+    contactedAnotherAgency: record.contactedAnotherAgency,
+    contactedAgency: record.contactedAgency,
+    optionalContact: record.optionalContact,
+    referredTo: '',
+    collaborators: [],
+    caseFocus: focus,
+  };
+}
+
+// ===== CASE TITLE BUILDER =====
+function buildCaseTitle(record, focus) {
+  const neighborhood = record.location?.neighborhood ?? 'community';
+  const focusLabel = focus ? formatStatusLabel(focus) : 'Community issue';
+  return `${focusLabel} in ${neighborhood}`;
+}
+
+// ===== RESPONSIBILITY PICKER =====
+function determineResponsibility(record) {
+  if (record.unread) return 'Unassigned';
+  if (record.contactedAgency) return record.contactedAgency;
+  return 'Coalition of Care Dispatch';
+}
+
+// ===== STATUS LABEL FORMATTER =====
+function formatStatusLabel(rawStatus) {
+  if (!rawStatus) return 'Under review';
+  return rawStatus
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+// ===== AUTH TOGGLE =====
+function toggleAuthentication() {
+  activeUser = activeUser ? null : { ...CURRENT_USER };
+  updateAuthUI();
+  if (selectedCase) {
+    renderCasePanel(selectedCase);
+  } else {
+    renderLists();
+  }
+}
+
+// ===== AUTH UI SYNC =====
+function updateAuthUI() {
+  if (!authToggle || !userNameEl || !userOrgEl) return;
+  if (activeUser) {
+    userNameEl.textContent = activeUser.name;
+    userOrgEl.textContent = activeUser.org;
+    authToggle.textContent = 'Log out';
+  } else {
+    userNameEl.textContent = 'Guest';
+    userOrgEl.textContent = 'Log in to collaborate';
+    authToggle.textContent = 'Log in';
+  }
 }

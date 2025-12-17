@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Source+Sans+3:wght@400;600;700&display=swap');
 
+/* ===== CORE THEME TOKENS ===== */
 :root {
   --sidebar-bg: rgba(255, 255, 255, 0.85);
   --panel-bg: rgba(255, 255, 255, 0.9);
@@ -14,6 +15,7 @@
   --font-display: 'Oswald', 'Source Sans 3', sans-serif;
 }
 
+/* ===== GLOBAL RESET ===== */
 * {
   box-sizing: border-box;
 }
@@ -22,6 +24,7 @@
   display: none !important;
 }
 
+/* ===== BODY BACKDROP ===== */
 body {
   margin: 0;
   min-height: 100vh;
@@ -34,6 +37,7 @@ body {
   position: relative;
 }
 
+/* ===== OVERLAY TINT ===== */
 body::before {
   content: '';
   position: fixed;
@@ -42,6 +46,7 @@ body::before {
   z-index: 0;
 }
 
+/* ===== HEADER WRAPPER ===== */
 .app-header {
   position: fixed;
   top: 1.5rem;
@@ -51,20 +56,26 @@ body::before {
   width: min(1200px, 90vw);
 }
 
+/* ===== HEADER LAYOUT ===== */
 .app-header__content {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-family: var(--font-display);
 }
 
+/* ===== MAIN TITLE ===== */
 .app-header h1 {
   margin: 0.4rem 0 0;
   font-size: 2.6rem;
   font-family: var(--font-display);
 }
 
+/* ===== SUB TITLE ===== */
 .app-header .subtitle {
   margin: 0.3rem 0 0;
   font-size: 1rem;
@@ -73,6 +84,81 @@ body::before {
   letter-spacing: 0.05em;
 }
 
+/* ===== HEADER BRAND SLOT ===== */
+.app-header__brand {
+  flex: 1;
+}
+
+/* ===== FILTER ROW ===== */
+.app-header__filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.35);
+  padding: 0.8rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.25);
+}
+
+/* ===== FILTER LABEL ===== */
+.app-header__filters label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.85);
+  gap: 0.3rem;
+  text-transform: uppercase;
+}
+
+/* ===== FILTER SELECT ===== */
+.app-header__filters select {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 0.35rem 0.8rem;
+  font: inherit;
+  min-width: 130px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-dark);
+}
+
+/* ===== FILTER RESET BUTTON ===== */
+.app-header__filters button {
+  align-self: flex-end;
+}
+
+/* ===== USER STACK ===== */
+.app-header__user {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: flex-end;
+}
+
+/* ===== USER PILL ===== */
+.user-pill {
+  padding: 0.4rem 0.9rem;
+  background: rgba(15, 23, 42, 0.35);
+  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* ===== USER NAME ===== */
+.user-pill span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ===== USER ORG ===== */
+.user-pill small {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ===== APP SHELL GRID ===== */
 .app-shell {
   position: fixed;
   top: 150px;
@@ -95,6 +181,7 @@ body::before {
   overflow: hidden;
 }
 
+/* ===== GENERIC PANEL CHROME ===== */
 .panel {
   border-radius: var(--panel-radius);
   background: var(--panel-bg);
@@ -107,14 +194,17 @@ body::before {
   overflow: hidden;
 }
 
+/* ===== LIVE PANEL SLOT ===== */
 .panel--live {
   grid-area: live;
 }
 
+/* ===== FOLLOW PANEL SLOT ===== */
 .panel--follow {
   grid-area: follow;
 }
 
+/* ===== CASE PANEL COLUMN ===== */
 .case-panel {
   grid-area: case;
   grid-row: 1 / span 2;
@@ -123,6 +213,7 @@ body::before {
   gap: 1.25rem;
 }
 
+/* ===== CASE PANEL EMPTY STATE ===== */
 .case-panel.hidden::after {
   content: 'Select a report to view case details';
   display: block;
@@ -134,6 +225,7 @@ body::before {
   margin-top: 2rem;
 }
 
+/* ===== CASE PANEL HIDDEN STRUCTURE ===== */
 .case-panel.hidden .case-panel__grid,
 .case-panel.hidden .case-panel__body {
   opacity: 0;
@@ -142,22 +234,26 @@ body::before {
   overflow: hidden;
 }
 
+/* ===== CASE PANEL ACTIVE STATE ===== */
 .case-panel:not(.hidden)::after {
   content: '';
 }
 
+/* ===== CASE PANEL GRID ===== */
 .case-panel__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
+/* ===== SUMMARY COLUMN ===== */
 .case-summary {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+/* ===== SUMMARY CARD ===== */
 .case-summary__card {
   border-radius: 1.25rem;
   border: 1px solid rgba(15, 23, 42, 0.12);
@@ -169,6 +265,7 @@ body::before {
   min-height: 160px;
 }
 
+/* ===== SUMMARY META ===== */
 .case-summary__meta {
   margin-top: 0.5rem;
   display: flex;
@@ -178,6 +275,7 @@ body::before {
   flex-wrap: wrap;
 }
 
+/* ===== LOCATOR CARD ===== */
 .case-locator {
   border-radius: 1.25rem;
   border: 1px solid rgba(15, 23, 42, 0.1);
@@ -189,10 +287,12 @@ body::before {
   min-width: 0;
 }
 
+/* ===== LOCATOR HEADING ===== */
 .case-locator header h2 {
   margin: 0.2rem 0 0;
 }
 
+/* ===== MINI MAP WRAP ===== */
 .case-locator #locator-map {
   flex: 1;
   min-height: 150px;
@@ -201,6 +301,7 @@ body::before {
   overflow: hidden;
 }
 
+/* ===== EYEBROW TEXT ===== */
 .eyebrow {
   margin: 0;
   text-transform: uppercase;
@@ -209,6 +310,7 @@ body::before {
   color: var(--text-muted);
 }
 
+/* ===== PANEL TITLES ===== */
 .panel h1,
 .panel h2 {
   margin: 0.25rem 0 0;
@@ -217,10 +319,12 @@ body::before {
   letter-spacing: 0.03em;
 }
 
+/* ===== PANEL SUBHEAD ===== */
 .panel-heading {
   margin-bottom: 0.5rem;
 }
 
+/* ===== REPORT LIST WRAP ===== */
 .report-list {
   list-style: none;
   margin: 1rem 0 0;
@@ -231,14 +335,17 @@ body::before {
   padding-right: 0.5rem;
 }
 
+/* ===== REPORT ENTRY ===== */
 .report-list li {
   padding: 0.65rem 0;
 }
 
+/* ===== REPORT DIVIDER ===== */
 .report-list li + li {
   border-top: 1px solid rgba(15, 23, 42, 0.12);
 }
 
+/* ===== REPORT CTA ===== */
 .report-row {
   width: 100%;
   border: none;
@@ -252,11 +359,13 @@ body::before {
   cursor: pointer;
 }
 
+/* ===== REPORT CTA FOCUS ===== */
 .report-row:focus-visible {
   outline: 2px solid rgba(59, 130, 246, 0.35);
   border-radius: 0.5rem;
 }
 
+/* ===== REPORT CTA HEADER ===== */
 .report-row__header {
   display: flex;
   justify-content: space-between;
@@ -265,6 +374,7 @@ body::before {
   flex-wrap: wrap;
 }
 
+/* ===== REPORT CTA PILLS ===== */
 .report-row__pills {
   display: flex;
   gap: 0.4rem;
@@ -272,16 +382,19 @@ body::before {
   justify-content: flex-end;
 }
 
+/* ===== REPORT CTA TITLE ===== */
 .report-row__title {
   margin: 0;
   font-size: 0.98rem;
   font-weight: 600;
 }
 
+/* ===== REPORT CTA UNREAD ===== */
 .report-row--unread .report-row__title {
   font-weight: 700;
 }
 
+/* ===== REPORT CTA META ===== */
 .report-row__meta {
   display: flex;
   justify-content: space-between;
@@ -291,11 +404,22 @@ body::before {
   flex-wrap: wrap;
 }
 
+/* ===== REPORT CTA META RIGHT ===== */
 .report-row__meta span:last-child {
   margin-left: auto;
   text-align: right;
 }
 
+/* ===== REPORT CTA HINT ===== */
+.report-row__hint {
+  margin: 0.15rem 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.5);
+}
+
+/* ===== PRIORITY PILL BASE ===== */
 .priority-pill {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
@@ -306,26 +430,31 @@ body::before {
   color: #0f172a;
 }
 
+/* ===== PRIORITY PILL LOW ===== */
 .priority-pill--low {
   background: rgba(59, 130, 246, 0.15);
   color: #1d4ed8;
 }
 
+/* ===== PRIORITY PILL MED ===== */
 .priority-pill--medium {
   background: rgba(249, 115, 22, 0.18);
   color: #ea580c;
 }
 
+/* ===== PRIORITY PILL HIGH ===== */
 .priority-pill--high {
   background: rgba(244, 63, 94, 0.2);
   color: #be123c;
 }
 
+/* ===== PRIORITY PILL URGENT ===== */
 .priority-pill--urgent {
   background: #dc2626;
   color: #fff;
 }
 
+/* ===== REPORT BADGES ===== */
 .report-row__badges {
   display: flex;
   gap: 0.5rem;
@@ -333,6 +462,16 @@ body::before {
   flex-wrap: wrap;
 }
 
+/* ===== REPORT EMPTY STATE ===== */
+.report-empty {
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.05);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ===== REPORT LABEL BASE ===== */
 .report-label {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
@@ -340,19 +479,23 @@ body::before {
   color: var(--text-muted);
 }
 
+/* ===== REPORT LABEL UNREAD ===== */
 .report-label--unread {
   color: #0f172a;
   font-weight: 600;
 }
 
+/* ===== REPORT LABEL COMMENTS ===== */
 .report-label--comments {
   color: #2563eb;
 }
 
+/* ===== REPORT LABEL TIME ===== */
 .report-label--time {
   color: #475569;
 }
 
+/* ===== STATUS PILL BASE ===== */
 .status-pill {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
@@ -363,36 +506,42 @@ body::before {
   color: var(--text-dark);
 }
 
+/* ===== STATUS PILL URGENT ===== */
 .status-pill--urgent {
   background: rgba(220, 38, 38, 0.15);
   border-color: rgba(220, 38, 38, 0.35);
   color: #991b1b;
 }
 
+/* ===== STATUS PILL IN-PROGRESS ===== */
 .status-pill--in-progress {
   background: rgba(59, 130, 246, 0.12);
   border-color: rgba(59, 130, 246, 0.35);
   color: #1d4ed8;
 }
 
+/* ===== STATUS PILL CLOSED ===== */
 .status-pill--closed {
   background: rgba(34, 197, 94, 0.15);
   border-color: rgba(34, 197, 94, 0.35);
   color: #15803d;
 }
 
+/* ===== STATUS PILL REFERRED ===== */
 .status-pill--referred {
   background: rgba(249, 115, 22, 0.15);
   border-color: rgba(249, 115, 22, 0.3);
   color: #c2410c;
 }
 
+/* ===== STATUS PILL NEUTRAL ===== */
 .status-pill--needs-follow-up,
 .status-pill--under-review,
 .status-pill--unread {
   background: rgba(15, 23, 42, 0.08);
 }
 
+/* ===== STATUS PILL NEEDS URGENT ===== */
 .status-pill--needs-urgent-assistance {
   background: rgba(220, 38, 38, 0.15);
   border-color: rgba(220, 38, 38, 0.35);
@@ -401,22 +550,16 @@ body::before {
 
 .case-panel__body {
   flex: 1;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.case-panel__details {
-  flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
   min-height: 0;
 }
 
+/* ===== CASE HEADER ===== */
 .case-panel__header {
   display: flex;
   justify-content: space-between;
@@ -425,11 +568,13 @@ body::before {
   flex-wrap: wrap;
 }
 
+/* ===== CASE HEADER ACTIONS ===== */
 .case-panel__header-actions {
   display: flex;
   gap: 0.75rem;
 }
 
+/* ===== CASE STATUS TEXT ===== */
 .case-status {
   margin: 0 0 0.25rem;
   font-size: 0.85rem;
@@ -438,11 +583,13 @@ body::before {
   text-transform: uppercase;
 }
 
+/* ===== CASE ADDRESS TEXT ===== */
 .case-address {
   margin: 0.2rem 0 0;
   color: var(--text-muted);
 }
 
+/* ===== REPORTER DESCRIPTION ===== */
 .reporter-description {
   margin: 0.4rem 0 0;
   font-size: 0.95rem;
@@ -450,11 +597,34 @@ body::before {
   font-style: italic;
 }
 
+/* ===== CASE DESCRIPTION BLOCK ===== */
 .case-description {
   margin: 0.5rem 0 0;
   line-height: 1.5;
 }
 
+/* ===== CASE DETAIL GRID ===== */
+.case-panel__columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ===== CASE DETAILS CARD ===== */
+.case-details {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: rgba(248, 250, 252, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+/* ===== CASE META GRID ===== */
 .case-meta {
   margin: 0;
   display: grid;
@@ -462,6 +632,7 @@ body::before {
   gap: 1rem;
 }
 
+/* ===== CASE META LABEL ===== */
 .case-meta dt {
   font-size: 0.72rem;
   letter-spacing: 0.08em;
@@ -470,17 +641,20 @@ body::before {
   margin-bottom: 0.25rem;
 }
 
+/* ===== CASE META VALUE ===== */
 .case-meta dd {
   margin: 0;
   font-weight: 600;
 }
 
+/* ===== CASE TAGS WRAP ===== */
 .case-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
+/* ===== CASE TAG CHIP ===== */
 .case-tag {
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
@@ -489,6 +663,7 @@ body::before {
   background: rgba(15, 23, 42, 0.04);
 }
 
+/* ===== COLLAB CARD ===== */
 .case-collaborators {
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 1.1rem;
@@ -496,6 +671,7 @@ body::before {
   background: rgba(248, 250, 252, 0.9);
 }
 
+/* ===== COLLAB LIST ===== */
 .case-collaborators ul {
   list-style: none;
   margin: 0.5rem 0 0;
@@ -505,6 +681,7 @@ body::before {
   gap: 0.5rem;
 }
 
+/* ===== COLLAB CHIP ===== */
 .case-collaborators li {
   background: #dbeafe;
   color: #1d4ed8;
@@ -513,12 +690,14 @@ body::before {
   font-size: 0.82rem;
 }
 
+/* ===== COLLAB EMPTY ===== */
 .case-collaborators .collaborator-empty {
   background: transparent;
   color: var(--text-muted);
   border: 1px dashed rgba(15, 23, 42, 0.25);
 }
 
+/* ===== ACTION CENTER CARD ===== */
 .case-actions {
   border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: 1.25rem;
@@ -530,16 +709,26 @@ body::before {
   flex-shrink: 0;
 }
 
+/* ===== ACTION CENTER HEADING ===== */
 .case-actions header h4 {
   margin: 0.2rem 0 0;
 }
 
+/* ===== ACTION CARD GRID ===== */
 .case-actions__body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.85rem;
 }
 
+/* ===== ACTION HINT ===== */
+.case-action-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ===== ACTION CARD ===== */
 .action-card {
   border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 1rem;
@@ -550,6 +739,7 @@ body::before {
   gap: 0.5rem;
 }
 
+/* ===== ACTION CARD INPUTS ===== */
 .action-card select,
 .action-card input {
   border-radius: 0.75rem;
@@ -560,6 +750,7 @@ body::before {
 }
 
 
+/* ===== BUTTON BASE ===== */
 .primary-btn,
 .ghost-btn {
   font: inherit;
@@ -569,6 +760,7 @@ body::before {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* ===== PRIMARY BUTTON ===== */
 .primary-btn {
   border: none;
   background: var(--accent);
@@ -576,6 +768,7 @@ body::before {
   box-shadow: 0 10px 20px rgba(234, 88, 12, 0.25);
 }
 
+/* ===== PRIMARY INTERACTION ===== */
 .primary-btn:hover,
 .primary-btn:focus-visible {
   outline: none;
@@ -583,16 +776,19 @@ body::before {
   transform: translateY(-1px);
 }
 
+/* ===== GHOST BUTTON ===== */
 .ghost-btn {
   border: 1px solid rgba(15, 23, 42, 0.15);
   background: transparent;
   color: var(--text-dark);
 }
 
+/* ===== CLOSE BUTTON ===== */
 .ghost-btn--close {
   padding-inline: 1rem;
 }
 
+/* ===== GHOST INTERACTION ===== */
 .ghost-btn:hover,
 .ghost-btn:focus-visible {
   outline: none;
@@ -600,6 +796,7 @@ body::before {
   color: var(--accent-strong);
 }
 
+/* ===== THREAD GRID ===== */
 .case-thread {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -608,6 +805,7 @@ body::before {
   min-height: 0;
 }
 
+/* ===== THREAD COLUMN ===== */
 .thread-column {
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 1.25rem;
@@ -618,10 +816,12 @@ body::before {
   min-height: 0;
 }
 
+/* ===== READONLY NOTES STATE ===== */
 .notes-readonly {
   opacity: 0.85;
 }
 
+/* ===== THREAD HEADER ===== */
 .thread-header {
   display: flex;
   justify-content: space-between;
@@ -629,11 +829,13 @@ body::before {
   margin-bottom: 0.85rem;
 }
 
+/* ===== THREAD COUNT ===== */
 .thread-count {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
 
+/* ===== THREAD LIST ===== */
 .thread-list {
   list-style: none;
   margin: 0;
@@ -646,6 +848,7 @@ body::before {
   overflow-y: auto;
 }
 
+/* ===== THREAD ITEM ===== */
 .thread-list li {
   border-radius: 1rem;
   padding: 0.75rem;
@@ -653,17 +856,20 @@ body::before {
   max-width: 85%;
 }
 
+/* ===== THREAD AUTHOR ===== */
 .thread-list strong {
   display: block;
   margin-bottom: 0.25rem;
 }
 
+/* ===== THREAD TEXT ===== */
 .thread-list p {
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.4;
 }
 
+/* ===== THREAD REPLY PREVIEW ===== */
 .reply-preview {
   margin: 0 0 0.4rem;
   padding: 0.35rem 0.55rem;
@@ -673,6 +879,7 @@ body::before {
   text-align: left;
 }
 
+/* ===== THREAD TIMESTAMP ===== */
 .thread-timestamp {
   display: block;
   margin-top: 0.35rem;
@@ -682,20 +889,24 @@ body::before {
   text-transform: uppercase;
 }
 
+/* ===== COMMENT COLUMN ALIGN ===== */
 .thread-list--comments {
   align-items: flex-end;
 }
 
+/* ===== COMMENT ITEM ===== */
 .thread-list--comments li {
   margin-left: auto;
   background: #dbeafe;
   text-align: right;
 }
 
+/* ===== COMMENT AUTHOR COLOR ===== */
 .thread-list--comments li strong {
   color: #1d4ed8;
 }
 
+/* ===== THREAD EMPTY ===== */
 .thread-empty {
   background: rgba(15, 23, 42, 0.03);
   color: var(--text-muted);
@@ -703,6 +914,7 @@ body::before {
   border: 1px dashed rgba(15, 23, 42, 0.2);
 }
 
+/* ===== THREAD FORM ===== */
 .thread-form {
   margin-top: 1rem;
   display: flex;
@@ -710,33 +922,39 @@ body::before {
   gap: 0.75rem;
 }
 
+/* ===== THREAD FORM TEXTAREA ===== */
 .thread-form textarea {
   resize: vertical;
   min-height: 80px;
 }
 
+/* ===== THREAD FORM ACTIONS ===== */
 .thread-form__actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
 }
 
+/* ===== REPLY HINT ===== */
 .reply-hint {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
 
+/* ===== PERMISSIONS HINT ===== */
 .permissions-hint {
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-top: 0.5rem;
 }
 
+/* ===== SMALL GHOST BUTTON ===== */
 .ghost-btn--small {
   padding: 0.35rem 0.9rem;
   font-size: 0.82rem;
 }
 
+/* ===== ACCESSIBLE HIDDEN ===== */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -748,6 +966,7 @@ body::before {
   border: 0;
 }
 
+/* ===== RESPONSIVE: LARGE TABLET ===== */
 @media (max-width: 1100px) {
   .app-header {
     position: static;
@@ -768,5 +987,27 @@ body::before {
       'follow';
     padding: 2rem 1.5rem;
     margin: 1.5rem auto;
+  }
+}
+
+/* ===== RESPONSIVE: TABLET ===== */
+@media (max-width: 900px) {
+  .app-header__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-header__filters {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .app-header__filters label {
+    flex: 1 1 140px;
+  }
+
+  .app-header__user {
+    align-items: flex-start;
   }
 }
