@@ -1,18 +1,19 @@
+/* stylelint-disable color-function-notation */
+/* stylelint-disable selector-class-pattern */
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Source+Sans+3:wght@400;600;700&display=swap');
 
 /* ===== CORE THEME TOKENS ===== */
 :root {
-  --sidebar-bg: rgba(255, 255, 255, 0.85);
-  --panel-bg: rgba(255, 255, 255, 0.9);
+  --sidebar-bg: rgba(255, 255, 255, 85%);
+  --panel-bg: rgba(255, 255, 255, 90%);
   --text-dark: #0f172a;
   --text-muted: #475569;
   --accent: #ea580c;
   --accent-strong: #c2410c;
-  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.25);
+  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 25%);
   --panel-radius: 28px;
-  --font-body: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont,
-    sans-serif;
-  --font-display: 'Oswald', 'Source Sans 3', sans-serif;
+  --font-body: '', 'Oswald', 'Source Sans 3', sans-serif;
+  --font-display: 'Archivo Black', 'Source Sans 3', sans-serif;
 }
 
 /* ===== GLOBAL RESET ===== */
@@ -30,7 +31,7 @@ body {
   min-height: 100vh;
   font-family: var(--font-body);
   color: var(--text-dark);
-  background-image: url('https://images.unsplash.com/photo-1541854617800-9739ec535f29?auto=format&fit=crop&w=2000&q=80');
+  background-color: brown;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -42,8 +43,8 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.7);
-  z-index: 0;
+  background: rgba(2, 6, 23, 70%);
+  z-index: 1;
 }
 
 /* ===== HEADER WRAPPER ===== */
@@ -54,9 +55,9 @@ body::before {
   transform: translateX(-50%);
   z-index: 2;
   width: min(1200px, 90vw);
-}
+} 
 
-/* ===== HEADER LAYOUT ===== */
+/* ===== header layout ===== */
 .app-header__content {
   display: flex;
   justify-content: space-between;
@@ -68,16 +69,17 @@ body::before {
   font-family: var(--font-display);
 }
 
-/* ===== MAIN TITLE ===== */
+/* ===== Title: FLICR Philadelphia ===== */
 .app-header h1 {
-  margin: 0.4rem 0 0;
+  margin: 0.75rem;
   font-size: 2.6rem;
+  gap: 1.5;
   font-family: var(--font-display);
 }
 
-/* ===== SUB TITLE ===== */
+/* ===== Subtitle: First Line In Community Reporting, Coalition of Care ===== */
 .app-header .subtitle {
-  margin: 0.3rem 0 0;
+  margin: 0.85rem;
   font-size: 1rem;
   font-family: var(--font-body);
   text-transform: none;
@@ -94,40 +96,41 @@ body::before {
   display: flex;
   align-items: flex-end;
   gap: 1rem;
-  background: rgba(15, 23, 42, 0.35);
+  background: #0f172a59;
   padding: 0.8rem 1.25rem;
   border-radius: 1rem;
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 10px 20px #0f172a40;
 }
 
-/* ===== FILTER LABEL ===== */
+/* ===== filter label ===== */
 .app-header__filters label {
   display: flex;
   flex-direction: column;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffffd9;
+  font-weight: 500;
   gap: 0.3rem;
   text-transform: uppercase;
 }
 
-/* ===== FILTER SELECT ===== */
+/* ===== selevting a filter ===== */
 .app-header__filters select {
   border-radius: 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid #fff;
   padding: 0.35rem 0.8rem;
   font: inherit;
   min-width: 130px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #ffffffe6;
   color: var(--text-dark);
 }
 
-/* ===== FILTER RESET BUTTON ===== */
+/* ===== reset filter button ===== */
 .app-header__filters button {
   align-self: flex-end;
 }
 
-/* ===== USER STACK ===== */
+/* ===== user stack ===== */
 .app-header__user {
   display: flex;
   flex-direction: column;
@@ -135,27 +138,27 @@ body::before {
   align-items: flex-end;
 }
 
-/* ===== USER PILL ===== */
+/* ===== user badge ===== */
 .user-pill {
   padding: 0.4rem 0.9rem;
-  background: rgba(15, 23, 42, 0.35);
-  border-radius: 999px;
+  background: #0f172a59;
+  border-radius: 50px;
   display: flex;
   flex-direction: column;
   text-transform: none;
   letter-spacing: normal;
 }
 
-/* ===== USER NAME ===== */
+/* ===== user name badge ===== */
 .user-pill span {
   font-size: 0.9rem;
   font-weight: 600;
 }
 
-/* ===== USER ORG ===== */
+/* ===== user org badge ===== */
 .user-pill small {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #fff;
 }
 
 /* ===== APP SHELL GRID ===== */
@@ -164,29 +167,29 @@ body::before {
   top: 150px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1380px, 94vw);
-  height: calc(100vh - 220px);
+  width: min(95vw);
+  height: calc(100vh - 20vh);
   z-index: 1;
   padding: 2.5rem;
-  border-radius: 40px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  border-radius: 5px;
+  background: #ffffffd1;
+  box-shadow: 0 30px 80px #00000059;
   display: grid;
-  grid-template-columns: minmax(320px, 0.85fr) minmax(560px, 1.35fr);
+  grid-template-columns: 1fr 2fr;
   grid-template-rows: repeat(2, minmax(280px, 1fr));
   grid-template-areas:
     'live case'
     'follow case';
-  gap: 2rem;
+  gap: 1rem;
   overflow: hidden;
 }
 
-/* ===== GENERIC PANEL CHROME ===== */
+/* ===== main panel box design ===== */
 .panel {
-  border-radius: var(--panel-radius);
+  border-radius: 10px;
   background: var(--panel-bg);
   box-shadow: var(--shadow-soft);
-  padding: 2rem 2.5rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -194,28 +197,39 @@ body::before {
   overflow: hidden;
 }
 
-/* ===== LIVE PANEL SLOT ===== */
+/* ===== live feed panel slot ===== */
 .panel--live {
+  border-radius: 3px;
   grid-area: live;
+  margin-left: -1.25rem;
+  margin-top: -1.25rem;
 }
 
-/* ===== FOLLOW PANEL SLOT ===== */
+/* ===== follow-up panel slot ===== */
 .panel--follow {
+  border-radius: 3px;
   grid-area: follow;
+  padding: 1rem;
+  margin-left: -1.25rem;
+  margin-bottom: -1.25rem;
 }
 
-/* ===== CASE PANEL COLUMN ===== */
+/* ===== case panel box ===== */
 .case-panel {
+  border-radius: 3px;
   grid-area: case;
   grid-row: 1 / span 2;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  margin-right: -1.25rem;
+  margin-bottom: -1.25rem;
+  margin-top: -1.25rem;
 }
 
-/* ===== CASE PANEL EMPTY STATE ===== */
+/* ===== empty case panel ===== */
 .case-panel.hidden::after {
-  content: 'Select a report to view case details';
+  content: 'Select Report To View Details';
   display: block;
   color: var(--text-muted);
   font-size: 1rem;
@@ -225,16 +239,8 @@ body::before {
   margin-top: 2rem;
 }
 
-/* ===== CASE PANEL HIDDEN STRUCTURE ===== */
-.case-panel.hidden .case-panel__grid,
-.case-panel.hidden .case-panel__body {
-  opacity: 0;
-  pointer-events: none;
-  height: 0;
-  overflow: hidden;
-}
 
-/* ===== CASE PANEL ACTIVE STATE ===== */
+/* ===== active case panel ===== */
 .case-panel:not(.hidden)::after {
   content: '';
 }
@@ -243,29 +249,99 @@ body::before {
 .case-panel__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'summary actions'
+    'threads details';
+  gap: 1rem;
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.case-panel__grid > * {
+  min-height: 0;
+}
+
+.case-grid__details {
+  grid-area: details;
+}
+
+.case-grid__summary {
+  grid-area: summary;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
-/* ===== SUMMARY COLUMN ===== */
+.case-grid__actions {
+  grid-area: actions;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.case-grid__threads {
+  grid-area: threads;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
 .case-summary {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* ===== SUMMARY CARD ===== */
-.case-summary__card {
-  border-radius: 1.25rem;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  padding: 1rem 1.25rem;
-  background: rgba(248, 250, 252, 0.95);
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  min-height: 160px;
+.case-summary__layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  min-height: 0;
 }
 
-/* ===== SUMMARY META ===== */
+.panel-heading {
+  margin: 0;
+}
+
+.case-summary .panel-heading {
+  align-items: flex-start;
+}
+
+/* ===== CASE PANEL BODY ===== */
+.case-panel__body {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
+  min-height: 0;
+}
+
+/* ===== hidden case panel structure ===== */
+.case-panel.hidden .case-panel__grid,
+.case-panel.hidden .case-panel__body {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+}
+
+
+/* ===== mini case summary card ===== */
+.case-summary__card {
+  border-radius: 1.25rem;
+  border: 1px solid #0f172a1f;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 4rem;
+}
+
+/* ===== mata-sum under case details ===== */
 .case-summary__meta {
   margin-top: 0.5rem;
   display: flex;
@@ -275,28 +351,43 @@ body::before {
   flex-wrap: wrap;
 }
 
-/* ===== LOCATOR CARD ===== */
-.case-locator {
+/* ===== map box ===== */
+.case-summary__map {
+  border: 1px solid rgba(15, 23, 42, 8%);
   border-radius: 1.25rem;
-  border: 1px solid rgba(15, 23, 42, 0.1);
   padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 90%);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  min-width: 0;
+  gap: 0.5rem;
+  min-height: 0;
 }
 
-/* ===== LOCATOR HEADING ===== */
-.case-locator header h2 {
+/* ==== report activity, details, map titles ==== */
+.panel h2 {
+  margin: 0.25rem 0 0;
+  font-size: 1.85rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+}
+
+
+/* ===== map heading ===== */
+.case-summary__map header h2 {
   margin: 0.2rem 0 0;
 }
 
-/* ===== MINI MAP WRAP ===== */
-.case-locator #locator-map {
-  flex: 1;
-  min-height: 150px;
-  max-height: 160px;
+.case-summary__map header {
+  margin: 0 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* ===== map case ===== */
+.case-summary__map #locator-map {
+  flex: 1 1 auto;
+  min-height: 200px;
   border-radius: 1rem;
   overflow: hidden;
 }
@@ -310,42 +401,36 @@ body::before {
   color: var(--text-muted);
 }
 
-/* ===== PANEL TITLES ===== */
-.panel h1,
-.panel h2 {
+/* ===== panel title 1 ===== */
+.panel h1 {
   margin: 0.25rem 0 0;
   font-size: 1.85rem;
   font-family: var(--font-display);
   letter-spacing: 0.03em;
 }
 
-/* ===== PANEL SUBHEAD ===== */
-.panel-heading {
-  margin-bottom: 0.5rem;
-}
-
-/* ===== REPORT LIST WRAP ===== */
+/* ===== wrapping live reports list ===== */
 .report-list {
   list-style: none;
   margin: 1rem 0 0;
   padding: 0;
   flex: 1;
-  min-height: 0;
+  min-height: 20vh;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 
-/* ===== REPORT ENTRY ===== */
-.report-list li {
-  padding: 0.65rem 0;
+/* ===== report rows ===== */
+.report-list :where(li) {
+  padding: 0.2rem 0;
 }
 
-/* ===== REPORT DIVIDER ===== */
-.report-list li + li {
-  border-top: 1px solid rgba(15, 23, 42, 0.12);
+/* ===== divider ===== */
+.report-list :where(li + li) {
+  border-top: 1px solid #0f172a1f;
 }
 
-/* ===== REPORT CTA ===== */
+/* ===== report box for live feed and follow up ===== */
 .report-row {
   width: 100%;
   border: none;
@@ -361,11 +446,11 @@ body::before {
 
 /* ===== REPORT CTA FOCUS ===== */
 .report-row:focus-visible {
-  outline: 2px solid rgba(59, 130, 246, 0.35);
+  outline: 2px solid #3b82f659;
   border-radius: 0.5rem;
 }
 
-/* ===== REPORT CTA HEADER ===== */
+/* ===== individual report header ===== */
 .report-row__header {
   display: flex;
   justify-content: space-between;
@@ -374,27 +459,29 @@ body::before {
   flex-wrap: wrap;
 }
 
-/* ===== REPORT CTA PILLS ===== */
+/* ===== report chippies ===== */
 .report-row__pills {
   display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
+  gap: 0.2rem;
+  flex-wrap: wrap-reverse;
   justify-content: flex-end;
 }
 
-/* ===== REPORT CTA TITLE ===== */
+/* ===== report titles ===== */
 .report-row__title {
   margin: 0;
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.04rem;
+  font-family: Oswald, sans-serif;
 }
 
-/* ===== REPORT CTA UNREAD ===== */
+/* ===== unread alert ===== */
 .report-row--unread .report-row__title {
   font-weight: 700;
 }
 
-/* ===== REPORT CTA META ===== */
+/* ===== responsibility and address ===== */
 .report-row__meta {
   display: flex;
   justify-content: space-between;
@@ -404,74 +491,79 @@ body::before {
   flex-wrap: wrap;
 }
 
-/* ===== REPORT CTA META RIGHT ===== */
+/* ===== right side merta deets ===== */
 .report-row__meta span:last-child {
   margin-left: auto;
   text-align: right;
 }
 
-/* ===== REPORT CTA HINT ===== */
+/* ===== subtext =====
 .report-row__hint {
   margin: 0.15rem 0;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(15, 23, 42, 0.5);
-}
+  color: #0f172a80;
+} */
 
-/* ===== PRIORITY PILL BASE ===== */
+/* ===== priority chip ===== */
 .priority-pill {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
+  gap: 1.5rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.1rem 0.6rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.08);
+  background: #0f172a14;
   color: #0f172a;
 }
 
-/* ===== PRIORITY PILL LOW ===== */
+/* ===== low priority ===== */
 .priority-pill--low {
-  background: rgba(59, 130, 246, 0.15);
-  color: #1d4ed8;
+  background: #3b82f626;
+  color: #051b57;
+  font-size: 0.65rem;
 }
 
-/* ===== PRIORITY PILL MED ===== */
+/* ===== medium priority ===== */
 .priority-pill--medium {
-  background: rgba(249, 115, 22, 0.18);
-  color: #ea580c;
+  background: #e1d7a1;
+  color: #5d541f;
+  font-size: 0.65rem;
 }
 
-/* ===== PRIORITY PILL HIGH ===== */
+/* ===== high priority ===== */
 .priority-pill--high {
-  background: rgba(244, 63, 94, 0.2);
-  color: #be123c;
+  background: #e5bcb6;
+  color: #4d2721;
+  font-size: 0.65rem;
 }
 
-/* ===== PRIORITY PILL URGENT ===== */
+/* ===== urgent priority ===== */
 .priority-pill--urgent {
-  background: #dc2626;
-  color: #fff;
+  background: #e99f0b;
+  color: #530202;
+  font-size: 0.65rem;
 }
 
-/* ===== REPORT BADGES ===== */
+/* ===== report row badges ===== */
 .report-row__badges {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.3rem;
+  margin-top: 0.1rem;
   flex-wrap: wrap;
 }
 
-/* ===== REPORT EMPTY STATE ===== */
+/* ===== empty report ===== */
 .report-empty {
   padding: 1rem;
   border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.05);
+  background: #0f172a0d;
   color: var(--text-muted);
   font-size: 0.9rem;
 }
 
-/* ===== REPORT LABEL BASE ===== */
+/* ===== report label underneath ===== */
 .report-label {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
@@ -479,87 +571,80 @@ body::before {
   color: var(--text-muted);
 }
 
-/* ===== REPORT LABEL UNREAD ===== */
+/* ===== unread label ===== */
 .report-label--unread {
-  color: #0f172a;
+  background-color: #0d677d;
+  color: #d2e6ec;
   font-weight: 600;
 }
 
-/* ===== REPORT LABEL COMMENTS ===== */
+/* ===== report comments ===== */
 .report-label--comments {
-  color: #2563eb;
+  background-color: #0d677d;
+  color: #d2e6ec;
 }
 
-/* ===== REPORT LABEL TIME ===== */
+/* ===== days since report ===== */
 .report-label--time {
   color: #475569;
+  font-weight: 700;
 }
 
-/* ===== STATUS PILL BASE ===== */
+/* ===== status chip ===== */
 .status-pill {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
+  font-weight: 700;
   text-transform: uppercase;
   padding: 0.1rem 0.6rem;
   border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.15);
+  border: 1px solid #0f172a26;
   color: var(--text-dark);
 }
 
-/* ===== STATUS PILL URGENT ===== */
+/* ===== urgent status ===== */
 .status-pill--urgent {
-  background: rgba(220, 38, 38, 0.15);
-  border-color: rgba(220, 38, 38, 0.35);
+  background: #dc262626;
+  border-color: #dc262659;
   color: #991b1b;
 }
 
-/* ===== STATUS PILL IN-PROGRESS ===== */
+/* ===== in-progress ===== */
 .status-pill--in-progress {
-  background: rgba(59, 130, 246, 0.12);
-  border-color: rgba(59, 130, 246, 0.35);
+  background: #3b82f61f;
+  border-color: #3b82f659;
   color: #1d4ed8;
 }
 
-/* ===== STATUS PILL CLOSED ===== */
+/* ===== closed ===== */
 .status-pill--closed {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 15%);
+  border-color: rgba(34, 197, 94, 35%);
   color: #15803d;
 }
 
-/* ===== STATUS PILL REFERRED ===== */
+/* ===== referred ===== */
 .status-pill--referred {
-  background: rgba(249, 115, 22, 0.15);
-  border-color: rgba(249, 115, 22, 0.3);
+  background: #f9731626;
+  border-color: #f973164d;
   color: #c2410c;
 }
 
-/* ===== STATUS PILL NEUTRAL ===== */
+/* ===== neutral ===== */
 .status-pill--needs-follow-up,
 .status-pill--under-review,
 .status-pill--unread {
-  background: rgba(15, 23, 42, 0.08);
+  background: #0f172a14;
 }
 
-/* ===== STATUS PILL NEEDS URGENT ===== */
+/* ===== urgent assistance ===== */
 .status-pill--needs-urgent-assistance {
-  background: rgba(220, 38, 38, 0.15);
-  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 15%);
+  border-color: rgba(220, 38, 38, 35%);
   color: #991b1b;
 }
 
-.case-panel__body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 0.5rem;
-  min-height: 0;
-}
-
-/* ===== CASE HEADER ===== */
+/* ===== lower case details panel header ===== */
 .case-panel__header {
   display: flex;
   justify-content: space-between;
@@ -568,7 +653,7 @@ body::before {
   flex-wrap: wrap;
 }
 
-/* ===== CASE HEADER ACTIONS ===== */
+/* ===== case actions ===== */
 .case-panel__header-actions {
   display: flex;
   gap: 0.75rem;
@@ -577,7 +662,7 @@ body::before {
 /* ===== CASE STATUS TEXT ===== */
 .case-status {
   margin: 0 0 0.25rem;
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   letter-spacing: 0.1em;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -603,25 +688,17 @@ body::before {
   line-height: 1.5;
 }
 
-/* ===== CASE DETAIL GRID ===== */
-.case-panel__columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
-  flex: 1;
-  min-height: 0;
-}
-
 /* ===== CASE DETAILS CARD ===== */
 .case-details {
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 8%);
   border-radius: 1rem;
   padding: 1rem;
-  background: rgba(248, 250, 252, 0.95);
+  background: #f8fafcf2;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   overflow-y: auto;
+  min-height: 0;
 }
 
 /* ===== CASE META GRID ===== */
@@ -629,10 +706,10 @@ body::before {
   margin: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
+  gap: 2rem;
 }
 
-/* ===== CASE META LABEL ===== */
+/* ===== case panel bottom right grid labels ===== */
 .case-meta dt {
   font-size: 0.72rem;
   letter-spacing: 0.08em;
@@ -644,6 +721,7 @@ body::before {
 /* ===== CASE META VALUE ===== */
 .case-meta dd {
   margin: 0;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
@@ -658,17 +736,18 @@ body::before {
 .case-tag {
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.15);
+  color: #364872;
+  border: 1px solid #7195e877;
   font-size: 0.82rem;
-  background: rgba(15, 23, 42, 0.04);
+  background: #7195e877;
 }
 
 /* ===== COLLAB CARD ===== */
 .case-collaborators {
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 8%);
   border-radius: 1.1rem;
   padding: 1rem;
-  background: rgba(248, 250, 252, 0.9);
+  background: rgba(248, 250, 252, 90%);
 }
 
 /* ===== COLLAB LIST ===== */
@@ -694,19 +773,19 @@ body::before {
 .case-collaborators .collaborator-empty {
   background: transparent;
   color: var(--text-muted);
-  border: 1px dashed rgba(15, 23, 42, 0.25);
+  border: 1px dashed rgba(15, 23, 42, 25%);
 }
 
 /* ===== ACTION CENTER CARD ===== */
 .case-actions {
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid rgba(15, 23, 42, 10%);
   border-radius: 1.25rem;
-  padding: 1.2rem;
-  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem;
+  background: #f8fafcf2;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  flex-shrink: 0;
+  gap: 0.65rem;
+  flex: 1 1 0;
 }
 
 /* ===== ACTION CENTER HEADING ===== */
@@ -714,11 +793,12 @@ body::before {
   margin: 0.2rem 0 0;
 }
 
-/* ===== ACTION CARD GRID ===== */
+/* ===== grid for action card ===== */
 .case-actions__body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.85rem;
+  flex: 1;
 }
 
 /* ===== ACTION HINT ===== */
@@ -730,20 +810,31 @@ body::before {
 
 /* ===== ACTION CARD ===== */
 .action-card {
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(15, 23, 42, 12%);
   border-radius: 1rem;
   padding: 0.85rem;
-  background: rgba(248, 250, 252, 0.95);
+  background: #f8fafcf2;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
+}
+
+.action-card strong {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.action-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 /* ===== ACTION CARD INPUTS ===== */
 .action-card select,
 .action-card input {
-  border-radius: 0.75rem;
-  border: 1px solid rgba(15, 23, 42, 0.2);
+  border-radius: 5px;
+  border: 1px solid rgba(15, 23, 42, 20%);
   padding: 0.45rem 0.6rem;
   font: inherit;
   background: #fff;
@@ -765,7 +856,7 @@ body::before {
   border: none;
   background: var(--accent);
   color: #fff;
-  box-shadow: 0 10px 20px rgba(234, 88, 12, 0.25);
+  box-shadow: 0 10px 20px rgba(234, 88, 12, 25%);
 }
 
 /* ===== PRIMARY INTERACTION ===== */
@@ -778,7 +869,7 @@ body::before {
 
 /* ===== GHOST BUTTON ===== */
 .ghost-btn {
-  border: 1px solid rgba(15, 23, 42, 0.15);
+  border: 1px solid rgba(15, 23, 42, 15%);
   background: transparent;
   color: var(--text-dark);
 }
@@ -796,24 +887,20 @@ body::before {
   color: var(--accent-strong);
 }
 
-/* ===== THREAD GRID ===== */
-.case-thread {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  flex: 1;
-  min-height: 0;
-}
-
 /* ===== THREAD COLUMN ===== */
 .thread-column {
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 8%);
   border-radius: 1.25rem;
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 90%);
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow-y: auto;
+}
+
+.case-grid__threads .thread-column {
+  flex: 1 1 0;
 }
 
 /* ===== READONLY NOTES STATE ===== */
@@ -849,10 +936,10 @@ body::before {
 }
 
 /* ===== THREAD ITEM ===== */
-.thread-list li {
+.thread-list :where(li) {
   border-radius: 1rem;
   padding: 0.75rem;
-  background: rgba(15, 23, 42, 0.05);
+  background: rgba(15, 23, 42, 5%);
   max-width: 85%;
 }
 
@@ -874,7 +961,7 @@ body::before {
   margin: 0 0 0.4rem;
   padding: 0.35rem 0.55rem;
   border-left: 3px solid #93c5fd;
-  background: rgba(147, 197, 253, 0.25);
+  background: rgba(147, 197, 253, 25%);
   font-size: 0.82rem;
   text-align: left;
 }
@@ -895,7 +982,7 @@ body::before {
 }
 
 /* ===== COMMENT ITEM ===== */
-.thread-list--comments li {
+.thread-list--comments :where(li) {
   margin-left: auto;
   background: #dbeafe;
   text-align: right;
@@ -908,10 +995,10 @@ body::before {
 
 /* ===== THREAD EMPTY ===== */
 .thread-empty {
-  background: rgba(15, 23, 42, 0.03);
+  background: rgba(15, 23, 42, 3%);
   color: var(--text-muted);
   font-size: 0.9rem;
-  border: 1px dashed rgba(15, 23, 42, 0.2);
+  border: 1px dashed rgba(15, 23, 42, 20%);
 }
 
 /* ===== THREAD FORM ===== */
@@ -967,7 +1054,7 @@ body::before {
 }
 
 /* ===== RESPONSIVE: LARGE TABLET ===== */
-@media (max-width: 1100px) {
+@media (width <= 1100px) {
   .app-header {
     position: static;
     transform: none;
@@ -991,7 +1078,7 @@ body::before {
 }
 
 /* ===== RESPONSIVE: TABLET ===== */
-@media (max-width: 900px) {
+@media (width <= 900px) {
   .app-header__content {
     flex-direction: column;
     align-items: flex-start;

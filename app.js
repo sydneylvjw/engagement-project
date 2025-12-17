@@ -319,7 +319,6 @@ function buildReportRowMarkup(report, dateField) {
       <span>${report.address}</span>
       <span>${responsibility}</span>
     </div>
-    <p class="report-row__hint">Select to inspect case details</p>
     <div class="report-row__badges">${badge}</div>
   `;
 }
