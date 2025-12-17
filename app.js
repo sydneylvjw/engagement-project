@@ -80,13 +80,13 @@ const userNameEl = document.getElementById('user-name');
 const userOrgEl = document.getElementById('user-org');
 
 // ===== CASE SUMMARY FIELDS =====
-const caseSummaryFields = {
-  status: document.getElementById('case-status'),
-  title: document.getElementById('case-title'),
-  address: document.getElementById('case-address'),
-  type: document.getElementById('case-type-summary'),
-  responsibility: document.getElementById('case-responsibility-summary'),
-};
+// const caseSummaryFields = {
+//   status: document.getElementById('case-status'),
+//   title: document.getElementById('case-title'),
+//   address: document.getElementById('case-address'),
+//   type: document.getElementById('case-type-summary'),
+//   responsibility: document.getElementById('case-responsibility-summary'),
+// };
 
 // ===== CASE HEADER FIELDS =====
 const caseHeaderFields = {
@@ -332,7 +332,7 @@ function focusOnReport(report) {
 
 // ===== CASE PANEL RENDER =====
 function renderCasePanel(report) {
-  updateSummary(report);
+  // updateSummary(report);
   updateCaseHeader(report);
   reporterDescriptionEl.textContent = formatReporterDescription(report);
   caseMetaFields.id.textContent = report.id;
@@ -352,13 +352,13 @@ function renderCasePanel(report) {
 }
 
 // ===== SUMMARY WRITER =====
-function updateSummary(report) {
-  caseSummaryFields.status.textContent = report.status;
-  caseSummaryFields.title.textContent = report.title;
-  caseSummaryFields.address.textContent = formatCaseAddress(report);
-  caseSummaryFields.type.textContent = report.caseType ?? 'Case';
-  caseSummaryFields.responsibility.textContent = getResponsibilityLabel(report);
-}
+// function updateSummary(report) {
+//   caseSummaryFields.status.textContent = report.status;
+//   caseSummaryFields.title.textContent = report.title;
+//   caseSummaryFields.address.textContent = formatCaseAddress(report);
+//   caseSummaryFields.type.textContent = report.caseType ?? 'Case';
+//   caseSummaryFields.responsibility.textContent = getResponsibilityLabel(report);
+// }
 
 // ===== HEADER WRITER =====
 function updateCaseHeader(report) {

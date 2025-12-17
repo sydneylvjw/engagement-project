@@ -4,13 +4,13 @@
 
 /* ===== CORE THEME TOKENS ===== */
 :root {
-  --sidebar-bg: rgba(255, 255, 255, 85%);
-  --panel-bg: rgba(255, 255, 255, 90%);
+  --sidebar-bg: #ffffffd9;
+  --panel-bg: #ffffffe6;
   --text-dark: #0f172a;
   --text-muted: #475569;
   --accent: #ea580c;
   --accent-strong: #c2410c;
-  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 25%);
+  --shadow-soft: 0 24px 60px #0f172a40;
   --panel-radius: 28px;
   --font-body: '', 'Oswald', 'Source Sans 3', sans-serif;
   --font-display: 'Archivo Black', 'Source Sans 3', sans-serif;
@@ -25,31 +25,32 @@
   display: none !important;
 }
 
-/* ===== BODY BACKDROP ===== */
+/* ===== main background ===== */
 body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-body);
   color: var(--text-dark);
-  background-color: brown;
+  background-color: #cec073;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   position: relative;
 }
 
-/* ===== OVERLAY TINT ===== */
+/* ===== overlay tint on background ===== */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 70%);
+  background: #02061760;
   z-index: 1;
 }
 
 /* ===== HEADER WRAPPER ===== */
 .app-header {
-  position: fixed;
+  position: relative;
+  justify-content: space-between;
   top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
@@ -62,24 +63,32 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1.5rem;
-  color: #fff;
+  gap: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  color: #fff;
   font-family: var(--font-display);
-}
+} 
+
+/* ==== header layout ==== 
+.app-header__content {
+  display: flex;
+  flex-direction: column;    
+  align-items: stretch;
+  gap: 1.5rem;
+} */
 
 /* ===== Title: FLICR Philadelphia ===== */
 .app-header h1 {
-  margin: 0.75rem;
+  margin: 0.2rem;
   font-size: 2.6rem;
-  gap: 1.5;
+  gap: 1;
   font-family: var(--font-display);
 }
 
 /* ===== Subtitle: First Line In Community Reporting, Coalition of Care ===== */
 .app-header .subtitle {
-  margin: 0.85rem;
+  margin: 0.2rem;
   font-size: 1rem;
   font-family: var(--font-body);
   text-transform: none;
@@ -89,14 +98,15 @@ body::before {
 /* ===== HEADER BRAND SLOT ===== */
 .app-header__brand {
   flex: 1;
-}
+  flex-direction: row;
+} 
 
-/* ===== FILTER ROW ===== */
+/* ===== filters ===== */
 .app-header__filters {
   display: flex;
   align-items: flex-end;
   gap: 1rem;
-  background: #0f172a59;
+  background: #0d677d88;
   padding: 0.8rem 1.25rem;
   border-radius: 1rem;
   box-shadow: 0 10px 20px #0f172a40;
@@ -128,6 +138,9 @@ body::before {
 /* ===== reset filter button ===== */
 .app-header__filters button {
   align-self: flex-end;
+  color: #fff;
+  font-weight: 600;
+  background-color: #051b57;
 }
 
 /* ===== user stack ===== */
@@ -141,40 +154,44 @@ body::before {
 /* ===== user badge ===== */
 .user-pill {
   padding: 0.4rem 0.9rem;
-  background: #0f172a59;
-  border-radius: 50px;
+  background-color: #0d677d88;
+  border-radius: 10px;
   display: flex;
-  flex-direction: column;
+
+    /* flex direction is how the items within the pill are stacked */
+  flex-direction: column; 
   text-transform: none;
   letter-spacing: normal;
 }
 
 /* ===== user name badge ===== */
 .user-pill span {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
 /* ===== user org badge ===== */
 .user-pill small {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #fff;
 }
 
-/* ===== APP SHELL GRID ===== */
+/* ===== full app shell box ===== */
 .app-shell {
   position: fixed;
-  top: 150px;
+  top: 15vh;
   left: 50%;
   transform: translateX(-50%);
   width: min(95vw);
-  height: calc(100vh - 20vh);
+  height: calc(100vh - 17.5vh);
   z-index: 1;
-  padding: 2.5rem;
-  border-radius: 5px;
+  padding: 2rem;
+  border-radius: 10px;
   background: #ffffffd1;
   box-shadow: 0 30px 80px #00000059;
   display: grid;
+
+    /* division of space of columns within */
   grid-template-columns: 1fr 2fr;
   grid-template-rows: repeat(2, minmax(280px, 1fr));
   grid-template-areas:
@@ -187,7 +204,7 @@ body::before {
 /* ===== main panel box design ===== */
 .panel {
   border-radius: 10px;
-  background: var(--panel-bg);
+  background: #f1f0ee;
   box-shadow: var(--shadow-soft);
   padding: 1.5rem;
   display: flex;
@@ -199,7 +216,7 @@ body::before {
 
 /* ===== live feed panel slot ===== */
 .panel--live {
-  border-radius: 3px;
+  border-radius: 10px;
   grid-area: live;
   margin-left: -1.25rem;
   margin-top: -1.25rem;
@@ -207,7 +224,7 @@ body::before {
 
 /* ===== follow-up panel slot ===== */
 .panel--follow {
-  border-radius: 3px;
+  border-radius: 10px;
   grid-area: follow;
   padding: 1rem;
   margin-left: -1.25rem;
@@ -216,7 +233,7 @@ body::before {
 
 /* ===== case panel box ===== */
 .case-panel {
-  border-radius: 3px;
+  border-radius: 10px;
   grid-area: case;
   grid-row: 1 / span 2;
   display: flex;
@@ -245,31 +262,49 @@ body::before {
   content: '';
 }
 
-/* ===== CASE PANEL GRID ===== */
+/* ===== grid for the case panels ===== 
+   */
 .case-panel__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    'summary actions'
-    'threads details';
+    'summary actions actions'
+    'details details threads';
   gap: 1rem;
   flex: 1 1 0;
   min-height: 0;
 }
 
 .case-panel__grid > * {
-  min-height: 0;
+  min-height: 40vh;
+    display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'actions summary'
+    'threads details';
+}
+
+/* .case-grid__threads {
+  grid-area: threads;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
 }
 
 .case-grid__details {
   grid-area: details;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .case-grid__summary {
   grid-area: summary;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
   gap: 1rem;
 }
 
@@ -278,22 +313,16 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-}
+} */
 
-.case-grid__threads {
-  grid-area: threads;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  overflow-y: auto;
-}
-
+/* ==== outer flexbox of the cas summary ==== */
 .case-summary {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+/* ==== layout of the case summary ==== */
 .case-summary__layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -307,18 +336,20 @@ body::before {
 
 .case-summary .panel-heading {
   align-items: flex-start;
+  justify-content: space-between;
 }
 
-/* ===== CASE PANEL BODY ===== */
+/* ===== case panel innards (action center, case deets, threads) ===== */
 .case-panel__body {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
+  /* flex: 1.5 1 0; */
+  display: grid;
+  grid-row-end: auto;
   gap: 1rem;
+  margin-top: 20vh;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 0.5rem;
-  min-height: 0;
+  min-height: 40vh;
 }
 
 /* ===== hidden case panel structure ===== */
@@ -331,15 +362,16 @@ body::before {
 }
 
 
-/* ===== mini case summary card ===== */
+/* ===== small case summary card ===== */
 .case-summary__card {
+  position: relative;
   border-radius: 1.25rem;
   border: 1px solid #0f172a1f;
   padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
   min-height: 4rem;
-}
+} 
 
 /* ===== mata-sum under case details ===== */
 .case-summary__meta {
@@ -353,10 +385,10 @@ body::before {
 
 /* ===== map box ===== */
 .case-summary__map {
-  border: 1px solid rgba(15, 23, 42, 8%);
+  border: 1px solid #0f172a14;
   border-radius: 1.25rem;
   padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 90%);
+  background: #ffffffe6;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -646,7 +678,7 @@ body::before {
 
 /* ===== lower case details panel header ===== */
 .case-panel__header {
-  display: flex;
+  grid-column: 1;
   justify-content: space-between;
   gap: 1.5rem;
   align-items: flex-start;
@@ -778,14 +810,18 @@ body::before {
 
 /* ===== ACTION CENTER CARD ===== */
 .case-actions {
+  position: fixed;
+  flex-wrap: nowrap;
   border: 1px solid rgba(15, 23, 42, 10%);
   border-radius: 1.25rem;
   padding: 1rem;
   background: #f8fafcf2;
   display: flex;
   flex-direction: column;
+  max-height: 25vh;
   gap: 0.65rem;
-  flex: 1 1 0;
+  
+  /* flex: 1 1 0; */
 }
 
 /* ===== ACTION CENTER HEADING ===== */
@@ -795,9 +831,12 @@ body::before {
 
 /* ===== grid for action card ===== */
 .case-actions__body {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-direction: row;
+
+  /* grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
   gap: 0.85rem;
+  max-height: 20vh;
   flex: 1;
 }
 
@@ -892,7 +931,7 @@ body::before {
   border: 1px solid rgba(15, 23, 42, 8%);
   border-radius: 1.25rem;
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 90%);
+  background: #ffffffe6;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -901,6 +940,7 @@ body::before {
 
 .case-grid__threads .thread-column {
   flex: 1 1 0;
+  flex-direction: column;
 }
 
 /* ===== READONLY NOTES STATE ===== */
@@ -1007,6 +1047,25 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+@media (width <= 600px) {
+  .thread-form {
+    padding: 1rem;
+    background: var(--panel-bg);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .thread-form textarea {
+    font-size: 1rem;
+    min-height: 120px;
+  }
+
+  .thread-form__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 /* ===== THREAD FORM TEXTAREA ===== */

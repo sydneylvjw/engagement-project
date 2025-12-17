@@ -8,25 +8,20 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/maplibre-gl@3.6.2/dist/maplibre-gl.css"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <script type="module" crossorigin src="/assets/index-BRMqgFyE.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-g39KCnhq.css">
   </head>
   <body>
-    <!-- ===== global header (title, subtitle) ===== -->
+    <!-- ===== GLOBAL HEADER ===== -->
     <header class="app-header">
       <div class="app-header__content">
-
-        <!-- ===== branding, title, etc ===== -->
+        <!-- ===== BRANDING ===== -->
         <div class="app-header__brand">
-          <!-- <p class="eyebrow">Coalition of Care</p> -->
-
-          <!-- === title === -->
+          <p class="eyebrow">Coalition of Care</p>
           <h1>FLICR Philadelphia</h1>
-
-          <!-- == subtitle == -->
           <p class="subtitle">First Line in Community Reporting, Coalition of Care</p>
         </div>
-
-        <!-- ===== Filter drop downs at top ===== -->
+        <!-- ===== FILTER CONTROLS ===== -->
         <div class="app-header__filters" aria-label="Filter cases">
           <label>
             <span>Priority</span>
@@ -58,13 +53,9 @@
         </div>
       </div>
     </header>
-
-
-    <!-- ===== main app shell under title/filters ===== -->
+    <!-- ===== PRIMARY APP SHELL ===== -->
     <div class="app-shell">
-
-
-      <!-- ===== live feed (eyebrow, recent reports) ===== -->
+      <!-- ===== LIVE FEED PANEL ===== -->
       <section class="panel panel--live" aria-label="Live feed">
         <header>
           <p class="eyebrow">Live feed</p>
@@ -73,26 +64,11 @@
         <ul id="recent-list" class="report-list" aria-live="polite"></ul>
       </section>
 
-
-      <!-- ===== case panel: details and actions ===== -->
+      <!-- ===== CASE PANEL (DETAILS + ACTIONS) ===== -->
       <section id="case-panel" class="panel case-panel hidden" aria-label="Detailed case information">
-        
-        <!-- ==== grid for the case panel (case locator, old case summary mod) ==== -->
         <div class="case-panel__grid">
-
-
-          <!-- ===== action center title and subtitle within the case panel ===== -->
-          <section id="case-actions" class="case-actions" aria-live="polite">
-            <header>
-              <p class="eyebrow">Action center</p>
-              <h4>Move this case forward</h4>
-            </header>
-            <div id="case-actions-body" class="case-actions__body"></div>
-          </section>
-
-
           <!-- ===== CASE SUMMARY CARD ===== -->
-            <!-- <section class="case-summary">
+          <section class="case-summary">
             <header class="panel-heading">
               <p class="eyebrow">Case</p>
               <h2>Details</h2>
@@ -105,39 +81,39 @@
                 <span id="case-type-summary"></span>
                 <span id="case-responsibility-summary"></span>
               </div>
-            </div> -->
-            <!-- </section> -->
+            </div>
+          </section>
+          <section class="case-locator">
+            <header>
+              <p class="eyebrow">Locator</p>
+              <h2>Map</h2>
+            </header>
+            <div id="locator-map"></div>
+          </section>
+        </div>
 
-
-
-
-        <!-- ==== body for the case panel ==== -->
         <div class="case-panel__body">
-
-
-
-          <!-- == case panel header )status details, title, address, reporter desc.; all the stuff in the mini sum) == -->
           <div class="case-panel__header">
             <div>
               <p id="case-status-detail" class="case-status"></p>
               <h3 id="case-title-detail" aria-label="Case title">Case Title</h3>
               <p id="case-address-detail" class="case-address"></p>
               <p id="reporter-description" class="reporter-description"></p>
-              <p id="notes" class="case-summary__card"></p>
             </div>
-
-            <!-- == close case if yours == -->
             <div class="case-panel__header-actions">
               <button id="close-case" class="ghost-btn ghost-btn--close" type="button">Close</button>
             </div>
           </div>
-
-
           <div class="case-panel__columns">
-
-
-
-            <!-- ===== case info metadata ===== -->
+            <!-- ===== ACTION CENTER STACK ===== -->
+            <section id="case-actions" class="case-actions" aria-live="polite">
+              <header>
+                <p class="eyebrow">Action center</p>
+                <h4>Move this case forward</h4>
+              </header>
+              <div id="case-actions-body" class="case-actions__body"></div>
+            </section>
+            <!-- ===== CASE METADATA STACK ===== -->
             <section class="case-details">
               <p id="case-description" class="case-description"></p>
               <dl class="case-meta">
@@ -179,17 +155,6 @@
               </section>
             </section>
           </div>
-
-
-          <!-- === map ==== -->
-          <section class="case-locator">
-            <header>
-              <p class="eyebrow">Locator</p>
-              <h2>Map</h2>
-            </header>
-            <div id="locator-map"></div>
-          </section>
-        </div>
           <!-- ===== THREADS (COMMENTS + NOTES) ===== -->
           <section class="case-thread">
             <div id="comments-column" class="thread-column thread-column--comments">
@@ -241,6 +206,5 @@
       </section>
 
     </div>
-    <script type="module" src="app.js"></script>
   </body>
 </html>
