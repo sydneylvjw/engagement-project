@@ -1,0 +1,10 @@
+# Primary User
+This interactive tool was created as an alternative to 311. The main purpose is for residents and community members to be able to anonymously report building conditions that are routed to a coalition of local community organizations, legal advocacy groups, and policymakers instead of the Department of Licenses and Inspections. What we see here is the backend version of the tool that is visible to coalition members, allowing them to interact with the reported cases after they go through dispatch.
+
+## Needs
+The current reporting system for code violations responds to substandard property conditions through assessing an accumulative fee that can result in financial and emotional distress, or even dispossession. Rerouting reports to a coalition operating under a care-based model centers community support over punishment-motivated action. It also avoids adding to the burden experienced by residents living in substandard conditions and promote early action. The user hopes this can encourage self-reporting by allowing residents to reach out for help without fear of retribution or punitive consequences. 
+
+## Motivations
+The coalition is often only put in touch with their clients when their situations have reached a critical need for intervention and their housing or health is in a perilous state. If residents are able to self-report, they can get in touch with the services and resources they need before conditions deteriorate beyond repair. This also allows the busy individuals involved with the coalition to collaborate, communicate, and interact with cases.
+
+The coalition is often only put in touch with their clients when their situations have reached a critical need for intervention and their housing or health is in a perilous state. If residents are able to self-report, they can get in touch with the services and resources they need before conditions deteriorate beyond repair. This also allows the busy individuals involved with the coalition to communicate about reports, collaborate on cases, and refer cases to others if they are unable to help.
