@@ -1,14 +1,3 @@
-// ===== EXTERNAL LIBRARIES =====
-import maplibregl from 'https://cdn.jsdelivr.net/npm/maplibre-gl@3.6.2/+esm';
-
-// ===== VISUAL CONSTANTS =====
-const PRIORITY_COLORS = {
-  urgent: '#dc2626',
-  high: '#f97316',
-  medium: '#eab308',
-  low: '#0ea5e9',
-};
-
 // ===== USER PROFILE STATE =====
 const CURRENT_USER = {
   id: 'coalition-dispatch',
@@ -34,6 +23,7 @@ const filters = {
   priority: 'all',
   status: 'all',
   responsibility: 'all',
+  query: '',
 };
 let activeUser = { ...CURRENT_USER };
 
@@ -49,6 +39,10 @@ const caseState = loadCaseState();
 
 let selectedCase = null;
 let commentReplyTarget = null;
+let pendingModalSubmit = null;
+let modalReturnFocusEl = null;
+const appShell = document.querySelector('.app-shell');
+const appHeader = document.querySelector('.app-header');
 
 // ===== DOM REFERENCES =====
 const filterPriority = document.getElementById('filter-priority');
@@ -57,6 +51,8 @@ const filterResponsibility = document.getElementById('filter-responsibility');
 const filterResetBtn = document.getElementById('filter-reset');
 const recentList = document.getElementById('recent-list');
 const activityList = document.getElementById('activity-list');
+const searchInput = document.getElementById('search-input');
+const searchClearBtn = document.getElementById('search-clear');
 const casePanel = document.getElementById('case-panel');
 const closeCaseBtn = document.getElementById('close-case');
 const caseTagsContainer = document.getElementById('case-tags');
@@ -67,17 +63,28 @@ const notesList = document.getElementById('notes-list');
 const commentCount = document.getElementById('comment-count');
 const noteCount = document.getElementById('note-count');
 const commentForm = document.getElementById('comment-form');
-const commentField = document.getElementById('comment-text');
+const commentOpenBtn = document.getElementById('comment-open');
 const replyHint = document.getElementById('reply-hint');
 const cancelReplyBtn = document.getElementById('cancel-reply');
 const noteForm = document.getElementById('note-form');
-const noteField = document.getElementById('note-text');
+const noteOpenBtn = document.getElementById('note-open');
 const notePermissions = document.getElementById('note-permissions');
 const commentColumn = document.getElementById('comments-column');
 const notesColumn = document.getElementById('notes-column');
 const authToggle = document.getElementById('auth-toggle');
 const userNameEl = document.getElementById('user-name');
 const userOrgEl = document.getElementById('user-org');
+const casePillsDetail = document.getElementById('case-pills-detail');
+
+// ===== MODAL REFERENCES =====
+const inputModal = document.getElementById('input-modal');
+const inputModalTitle = document.getElementById('input-modal-title');
+const inputModalLabel = document.getElementById('input-modal-label');
+const inputModalText = document.getElementById('input-modal-text');
+const inputModalForm = document.getElementById('input-modal-form');
+const inputModalSelectWrap = document.getElementById('input-modal-select-wrap');
+const inputModalSelect = document.getElementById('input-modal-select');
+const inputModalSubmit = document.getElementById('input-modal-submit');
 
 // ===== CASE SUMMARY FIELDS =====
 // const caseSummaryFields = {
@@ -88,7 +95,7 @@ const userOrgEl = document.getElementById('user-org');
 //   responsibility: document.getElementById('case-responsibility-summary'),
 // };
 
-// ===== CASE HEADER FIELDS =====
+// ===== Case highlights =====
 const caseHeaderFields = {
   status: document.getElementById('case-status-detail'),
   title: document.getElementById('case-title-detail'),
@@ -98,7 +105,6 @@ const caseHeaderFields = {
 // ===== CASE META FIELDS =====
 const caseMetaFields = {
   id: document.getElementById('case-id'),
-  description: document.getElementById('case-description'),
   filed: document.getElementById('case-filed'),
   updated: document.getElementById('case-updated'),
   responsibility: document.getElementById('case-responsibility'),
@@ -108,65 +114,23 @@ const caseMetaFields = {
 };
 const reporterDescriptionEl = document.getElementById('reporter-description');
 
-// ===== MAPLIVRE CONFIG =====
-let mapReady = false;
-const map = new maplibregl.Map({
-  container: 'locator-map',
-  style: {
-    version: 8,
-    sources: {
-      esri: {
-        type: 'raster',
-        tiles: [
-          'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        ],
-        tileSize: 256,
-      },
-    },
-    layers: [{ id: 'esri', type: 'raster', source: 'esri' }],
-  },
-  center: [-75.1635, 39.9526],
-  zoom: 11.2,
-});
-
-map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-map.on('load', () => {
-  mapReady = true;
-  map.addSource('cases', {
-    type: 'geojson',
-    data: toGeoJSON(reports),
-  });
-
-  map.addLayer({
-    id: 'cases-layer',
-    type: 'circle',
-    source: 'cases',
-    paint: {
-      'circle-radius': 7,
-      'circle-color': ['get', 'color'],
-      'circle-stroke-width': 1.2,
-      'circle-stroke-color': '#ffffff',
-    },
-  });
-
-  map.on('click', 'cases-layer', (event) => {
-    const feature = event.features?.[0];
-    if (!feature) return;
-    const report = reports.find((r) => r.id === feature.properties.id);
-    if (report) focusOnReport(report);
-  });
-
-  map.on('mouseenter', 'cases-layer', () => (map.getCanvas().style.cursor = 'pointer'));
-  map.on('mouseleave', 'cases-layer', () => (map.getCanvas().style.cursor = ''));
-});
-
 // ===== EVENT WIRING =====
 closeCaseBtn.addEventListener('click', () => closeCasePanel());
-commentForm.addEventListener('submit', handleCommentSubmit);
-noteForm.addEventListener('submit', handleNoteSubmit);
+commentOpenBtn.addEventListener('click', openCommentModal);
+noteOpenBtn.addEventListener('click', openNoteModal);
 cancelReplyBtn.addEventListener('click', () => clearReplyTarget());
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeCasePanel();
+  if (event.key === 'Tab' && inputModal && !inputModal.classList.contains('is-hidden')) {
+    trapModalFocus(event);
+    return;
+  }
+  if (event.key === 'Escape') {
+    if (inputModal && !inputModal.classList.contains('is-hidden')) {
+      closeInputModal();
+    } else {
+      closeCasePanel();
+    }
+  }
 });
 filterPriority.addEventListener('change', () => updateFilters('priority', filterPriority.value));
 filterStatus.addEventListener('change', () => updateFilters('status', filterStatus.value));
@@ -175,11 +139,34 @@ filterResponsibility.addEventListener('change', () =>
 );
 filterResetBtn.addEventListener('click', resetFilters);
 authToggle.addEventListener('click', toggleAuthentication);
+searchInput?.addEventListener('input', () => updateSearch(searchInput.value));
+searchClearBtn?.addEventListener('click', () => {
+  updateSearch('');
+  if (searchInput) searchInput.focus();
+});
+
+document.querySelectorAll('[data-modal-close]').forEach((el) => {
+  el.addEventListener('click', closeInputModal);
+});
+inputModalForm.addEventListener('submit', handleInputModalSubmit);
 
 // ===== APP INIT =====
 async function init() {
   updateAuthUI();
+  syncAppShellTop();
+  window.addEventListener('resize', syncAppShellTop, { passive: true });
   await loadReports();
+}
+
+function syncAppShellTop() {
+  if (!appHeader) return;
+  if (!window.matchMedia || !window.matchMedia('(width <= 600px)').matches) {
+    document.documentElement.style.removeProperty('--app-shell-top');
+    return;
+  }
+  const rect = appHeader.getBoundingClientRect();
+  const top = Math.max(0, Math.ceil(rect.bottom + 12));
+  document.documentElement.style.setProperty('--app-shell-top', `${top}px`);
 }
 
 // ===== DATA FETCH =====
@@ -199,11 +186,149 @@ async function loadReports() {
 
 init();
 
+function openInputModal({
+  title,
+  label = 'Message',
+  placeholder = '',
+  submitLabel = 'Save',
+  textValue = '',
+  showPartnerSelect = false,
+  partnerOptions = [],
+  partnerValue = '',
+  onSubmit,
+}) {
+  if (!inputModal) return;
+  modalReturnFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  pendingModalSubmit = typeof onSubmit === 'function' ? onSubmit : null;
+  inputModalTitle.textContent = title ?? '';
+  inputModalLabel.textContent = label;
+  inputModalText.placeholder = placeholder;
+  inputModalText.value = textValue;
+  inputModalSubmit.textContent = submitLabel;
+
+  inputModalSelectWrap.classList.toggle('is-hidden', !showPartnerSelect);
+  if (showPartnerSelect) {
+    inputModalSelect.innerHTML = '';
+    partnerOptions.forEach((opt) => inputModalSelect.appendChild(opt));
+    inputModalSelect.value = partnerValue;
+  } else {
+    inputModalSelect.innerHTML = '';
+  }
+
+  inputModal.classList.remove('is-hidden');
+  if (appShell) {
+    appShell.setAttribute('aria-hidden', 'true');
+    if ('inert' in appShell) {
+      appShell.inert = true;
+    }
+  }
+  document.body.style.overflow = 'hidden';
+
+  queueMicrotask(() => {
+    if (showPartnerSelect) {
+      inputModalSelect.focus();
+    } else {
+      inputModalText.focus();
+      inputModalText.select();
+    }
+  });
+}
+
+function closeInputModal() {
+  if (!inputModal) return;
+  pendingModalSubmit = null;
+  inputModal.classList.add('is-hidden');
+  if (appShell) {
+    appShell.removeAttribute('aria-hidden');
+    if ('inert' in appShell) {
+      appShell.inert = false;
+    }
+  }
+  document.body.style.overflow = '';
+  if (modalReturnFocusEl) {
+    modalReturnFocusEl.focus();
+    modalReturnFocusEl = null;
+  }
+}
+
+function trapModalFocus(event) {
+  const panel = inputModal?.querySelector('.modal__panel');
+  if (!panel) return;
+  const focusable = Array.from(
+    panel.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((el) => el instanceof HTMLElement && !el.classList.contains('is-hidden'));
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+  if (event.shiftKey) {
+    if (active === first || !panel.contains(active)) {
+      event.preventDefault();
+      last.focus();
+    }
+    return;
+  }
+  if (active === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function handleInputModalSubmit(event) {
+  event.preventDefault();
+  if (!pendingModalSubmit) return;
+  const partner = inputModalSelectWrap.classList.contains('is-hidden')
+    ? ''
+    : inputModalSelect.value;
+  const text = inputModalText.value.trim();
+  const result = pendingModalSubmit({ text, partner });
+  if (result !== false) {
+    closeInputModal();
+  }
+}
+
+function openCommentModal() {
+  if (!selectedCase) return;
+  openInputModal({
+    title: commentReplyTarget ? 'Reply to comment' : 'Post a comment',
+    label: 'Comment',
+    placeholder: 'Leave a comment',
+    submitLabel: 'Post Comment',
+    onSubmit: ({ text }) => {
+      if (!text) return false;
+      const replyContext =
+        commentReplyTarget && commentReplyTarget.reportId === selectedCase.id
+          ? commentReplyTarget.entry
+          : null;
+      addThreadEntry(selectedCase.id, 'comments', text, getCurrentUserLabel(selectedCase), {
+        replyTo: replyContext,
+      });
+      clearReplyTarget();
+    },
+  });
+}
+
+function openNoteModal() {
+  if (!selectedCase) return;
+  openInputModal({
+    title: 'Save a note',
+    label: 'Note',
+    placeholder: 'Add coalition-visible note',
+    submitLabel: 'Save Note',
+    onSubmit: ({ text }) => {
+      if (!text) return false;
+      addThreadEntry(selectedCase.id, 'notes', text, getCurrentUserLabel(selectedCase));
+    },
+  });
+}
+
 // ===== STATE HYDRATION =====
 function setReports(data) {
   reports = data;
   applyCaseStateOverrides();
-  bootstrapEngagementSeeds(data);
+  hydrateEngagementThreads(data);
   populateFilterControls(data);
   renderLists();
   if (selectedCase) {
@@ -218,13 +343,23 @@ function setReports(data) {
 // ===== LIST RENDERING =====
 function renderLists() {
   const scopedReports = getFilteredReports();
-  renderReportList(recentList, sortReportsBy(scopedReports, 'reportedAt'), 'reportedAt');
-  renderReportList(activityList, sortReportsBy(scopedReports, 'lastEngaged'), 'lastEngaged');
-  refreshMapSource(scopedReports);
+  const selectedId = selectedCase?.id ?? null;
+  renderReportList(
+    recentList,
+    sortReportsBy(scopedReports, 'reportedAt'),
+    'reportedAt',
+    selectedId,
+  );
+  renderReportList(
+    activityList,
+    sortReportsBy(scopedReports, 'lastEngaged'),
+    'lastEngaged',
+    selectedId,
+  );
 }
 
 // ===== LIST ITEM BUILDER =====
-function renderReportList(listEl, items, dateField) {
+function renderReportList(listEl, items, dateField, selectedId) {
   listEl.innerHTML = '';
   if (!items.length) {
     const empty = document.createElement('li');
@@ -237,7 +372,11 @@ function renderReportList(listEl, items, dateField) {
     const li = document.createElement('li');
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'report-row';
+    button.className = report.id === selectedId ? 'report-row is-selected' : 'report-row';
+    button.dataset.reportId = report.id;
+    if (report.id === selectedId) {
+      button.setAttribute('aria-current', 'true');
+    }
     button.innerHTML = buildReportRowMarkup(report, dateField);
     button.addEventListener('click', () => focusOnReport(report));
     li.appendChild(button);
@@ -248,6 +387,22 @@ function renderReportList(listEl, items, dateField) {
 // ===== FILTERING UTILITIES =====
 function getFilteredReports() {
   return reports.filter((report) => {
+    if (filters.query) {
+      const q = filters.query.trim().toLowerCase();
+      if (q) {
+        const haystack = [
+          report.title,
+          report.address,
+          report.neighborhood,
+          report.councilDistrict,
+          report.description,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+    }
     if (filters.priority !== 'all' && report.priority !== filters.priority) return false;
     if (filters.status !== 'all' && report.status !== filters.status) return false;
     if (
@@ -265,13 +420,20 @@ function updateFilters(key, value) {
   renderLists();
 }
 
+function updateSearch(value) {
+  filters.query = value;
+  renderLists();
+}
+
 function resetFilters() {
   filters.priority = 'all';
   filters.status = 'all';
   filters.responsibility = 'all';
+  filters.query = '';
   filterPriority.value = 'all';
   filterStatus.value = 'all';
   filterResponsibility.value = 'all';
+  if (searchInput) searchInput.value = '';
   renderLists();
 }
 
@@ -327,7 +489,6 @@ function buildReportRowMarkup(report, dateField) {
 function focusOnReport(report) {
   selectedCase = report;
   renderCasePanel(report);
-  highlightMap(report);
 }
 
 // ===== CASE PANEL RENDER =====
@@ -336,7 +497,6 @@ function renderCasePanel(report) {
   updateCaseHeader(report);
   reporterDescriptionEl.textContent = formatReporterDescription(report);
   caseMetaFields.id.textContent = report.id;
-  caseMetaFields.description.textContent = report.description;
   caseMetaFields.filed.textContent = formatAbsoluteDate(report.reportedAt);
   caseMetaFields.updated.textContent = formatAbsoluteDate(report.lastEngaged);
   caseMetaFields.responsibility.textContent = getResponsibilityLabel(report);
@@ -349,6 +509,7 @@ function renderCasePanel(report) {
   renderCaseActions(report);
   clearReplyTarget();
   casePanel.classList.remove('hidden');
+  document.body.classList.add('case-open');
 }
 
 // ===== SUMMARY WRITER =====
@@ -362,9 +523,14 @@ function renderCasePanel(report) {
 
 // ===== HEADER WRITER =====
 function updateCaseHeader(report) {
-  caseHeaderFields.status.textContent = report.status;
+  caseHeaderFields.status.textContent = 'Case details';
   caseHeaderFields.title.textContent = report.title;
   caseHeaderFields.address.textContent = formatCaseAddress(report);
+  if (casePillsDetail) {
+    const priority = report.priority ?? 'medium';
+    const priorityPill = `<span class="priority-pill priority-pill--${priority}">${priority.toUpperCase()} PRIORITY</span>`;
+    casePillsDetail.innerHTML = `${formatStatusPill(report.status)}${priorityPill}`;
+  }
 }
 
 // ===== TAG RENDERER =====
@@ -405,9 +571,8 @@ function renderCollaborators(report) {
 // ===== THREAD RENDERER =====
 function renderThreads(report) {
   const threads = getCaseThreads(report.id);
-  const ownsCase = isCaseOwner(report);
   renderThreadItems(commentsList, threads.comments, 'comment', {
-    allowReply: ownsCase,
+    allowReply: isCaseOwner(report),
     report,
   });
   renderThreadItems(notesList, threads.notes, 'note');
@@ -421,17 +586,9 @@ function renderThreads(report) {
     'internal note',
     'No internal notes yet',
   );
-  noteForm.classList.toggle('is-hidden', !ownsCase);
-  notesColumn.classList.toggle('notes-readonly', !ownsCase);
-  notePermissions.classList.toggle('is-hidden', ownsCase);
-  if (!ownsCase) {
-    notePermissions.textContent = activeUser
-      ? 'Only case owners can capture internal notes.'
-      : 'Log in to capture internal notes.';
-    noteField.value = '';
-  } else {
-    notePermissions.textContent = '';
-  }
+  noteForm.classList.remove('is-hidden');
+  notePermissions.textContent = '';
+  notePermissions.classList.add('is-hidden');
 }
 
 // ===== ACTION CENTER RENDER =====
@@ -462,9 +619,10 @@ function renderCaseActions(report) {
 
   if (isUnassigned) {
     caseActionsBody.appendChild(buildTakeOwnershipCard(report));
-    caseActionsBody.appendChild(buildFocusCommentCard());
+    caseActionsBody.appendChild(buildReferCard(report));
+    caseActionsBody.appendChild(buildTagCard(report));
   } else {
-    caseActionsBody.appendChild(buildFocusCommentCard());
+    caseActionsBody.appendChild(buildReferCard(report));
     caseActionsBody.appendChild(buildCollaborationCard(report));
     caseActionsBody.appendChild(buildAssignmentRequestCard(report));
     if (referredToYou) {
@@ -488,26 +646,38 @@ function createActionCard(title, description) {
 // ===== REFER CARD =====
 function buildReferCard(report) {
   const card = createActionCard('Refer to partner', 'Route this case to a trusted organization.');
-  const select = document.createElement('select');
-  select.innerHTML = '<option value="">Select partner</option>';
-  PARTNER_ORGS.forEach((org) => {
-    const option = document.createElement('option');
-    option.value = org;
-    option.textContent = org;
-    select.appendChild(option);
-  });
-  if (report.referredTo) {
-    select.value = report.referredTo;
-  }
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'ghost-btn';
+  button.className = 'ghost-btn ghost-btn--small';
   button.textContent = 'Refer case';
   button.addEventListener('click', () => {
-    if (!select.value) return;
-    referCaseToPartner(report, select.value);
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Select partner';
+    const partnerOptionNodes = [
+      placeholder,
+      ...PARTNER_ORGS.map((org) => {
+        const option = document.createElement('option');
+        option.value = org;
+        option.textContent = org;
+        return option;
+      }),
+    ];
+    openInputModal({
+      title: 'Refer case to partner',
+      label: 'Referral message',
+      placeholder: 'Add context for the partner (optional)',
+      submitLabel: 'Refer case',
+      showPartnerSelect: true,
+      partnerOptions: partnerOptionNodes,
+      partnerValue: report.referredTo ?? '',
+      onSubmit: ({ text, partner: selectedPartner }) => {
+        if (!selectedPartner) return;
+        referCaseToPartner(report, selectedPartner, text);
+      },
+    });
   });
-  card.append(select, button);
+  card.append(button);
   return card;
 }
 
@@ -516,7 +686,7 @@ function buildCloseCard(report) {
   const card = createActionCard('Mark as closed', 'Wrap up when the coalition confirms resolution.');
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'ghost-btn';
+  button.className = 'ghost-btn ghost-btn--small';
   button.textContent = 'Close case';
   button.addEventListener('click', () => markCaseClosed(report));
   card.append(button);
@@ -526,20 +696,24 @@ function buildCloseCard(report) {
 // ===== TAG CARD =====
 function buildTagCard(report) {
   const card = createActionCard('Tag collaborators', 'Notify partners who should track this case.');
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = '@partner or @user';
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'ghost-btn';
+  button.className = 'ghost-btn ghost-btn--small';
   button.textContent = 'Add tag';
   button.addEventListener('click', () => {
-    const value = input.value.trim();
-    if (!value) return;
-    tagCollaborator(report, value);
-    input.value = '';
+    openInputModal({
+      title: 'Tag a collaborator',
+      label: 'Tag',
+      placeholder: '@partner or @user',
+      submitLabel: 'Add tag',
+      onSubmit: ({ text }) => {
+        const value = text.trim();
+        if (!value) return false;
+        tagCollaborator(report, value);
+      },
+    });
   });
-  card.append(input, button);
+  card.append(button);
   return card;
 }
 
@@ -549,24 +723,9 @@ function buildTakeOwnershipCard(report) {
   const card = createActionCard('Take responsibility', `Claim this case for ${orgLabel}.`);
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'primary-btn';
+  button.className = 'ghost-btn ghost-btn--small';
   button.textContent = 'Assign to me';
   button.addEventListener('click', () => takeCaseOwnership(report));
-  card.append(button);
-  return card;
-}
-
-// ===== COMMENT CTA CARD =====
-function buildFocusCommentCard() {
-  const card = createActionCard('Leave a comment', 'Share observations with the current case owner.');
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'ghost-btn';
-  button.textContent = 'Jump to comment box';
-  button.addEventListener('click', () => {
-    commentField.focus();
-    commentColumn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
   card.append(button);
   return card;
 }
@@ -576,7 +735,7 @@ function buildCollaborationCard(report) {
   const card = createActionCard('Request collaboration', 'Ask the owner to add you to this case.');
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'ghost-btn';
+  button.className = 'ghost-btn ghost-btn--small';
   button.textContent = 'Request collaboration';
   button.addEventListener('click', () => requestCollaboration(report));
   card.append(button);
@@ -588,7 +747,7 @@ function buildAssignmentRequestCard(report) {
   const card = createActionCard('Request to assume case', 'Offer to become the lead for this report.');
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'ghost-btn';
+  button.className = 'ghost-btn ghost-btn--small';
   button.textContent = 'Request assignment';
   button.addEventListener('click', () => requestAssignment(report));
   card.append(button);
@@ -601,7 +760,7 @@ function buildAcceptReferralCard(report) {
   const card = createActionCard('Accept referral', `This case was referred to ${orgLabel}.`);
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'primary-btn';
+  button.className = 'ghost-btn ghost-btn--small';
   button.textContent = 'Accept case';
   button.addEventListener('click', () => acceptReferral(report));
   card.append(button);
@@ -609,12 +768,15 @@ function buildAcceptReferralCard(report) {
 }
 
 // ===== REFER ACTION =====
-function referCaseToPartner(report, partner) {
+function referCaseToPartner(report, partner, message = '') {
   updateCase(report, { referredTo: partner, status: 'Referred' });
+  const note = message?.trim()
+    ? `Referred to ${partner}: ${message.trim()}`
+    : `Referred to ${partner} with supporting documents.`;
   addThreadEntry(
     report.id,
     'notes',
-    `Referred to ${partner} with supporting documents.`,
+    note,
     getCurrentUserLabel(report),
   );
 }
@@ -672,55 +834,12 @@ function acceptReferral(report) {
   );
 }
 
-// ===== COMMENT FORM HANDLER =====
-function handleCommentSubmit(event) {
-  event.preventDefault();
-  if (!selectedCase) return;
-  const text = commentField.value.trim();
-  if (!text) return;
-  const replyContext =
-    commentReplyTarget && commentReplyTarget.reportId === selectedCase.id
-      ? commentReplyTarget.entry
-      : null;
-  addThreadEntry(selectedCase.id, 'comments', text, getCurrentUserLabel(selectedCase), {
-    replyTo: replyContext,
-  });
-  commentField.value = '';
-  clearReplyTarget();
-}
-
-// ===== NOTE FORM HANDLER =====
-function handleNoteSubmit(event) {
-  event.preventDefault();
-  if (!selectedCase) return;
-  if (!isCaseOwner(selectedCase)) return;
-  const text = noteField.value.trim();
-  if (!text) return;
-  addThreadEntry(selectedCase.id, 'notes', text, getCurrentUserLabel(selectedCase));
-  noteField.value = '';
-}
-
 // ===== PANEL CLOSE ACTION =====
 function closeCasePanel() {
   selectedCase = null;
   clearReplyTarget();
   casePanel.classList.add('hidden');
-  if (map.getLayer('cases-layer')) {
-    map.setPaintProperty('cases-layer', 'circle-stroke-width', 1.2);
-  }
-}
-
-// ===== MAP HIGHLIGHT =====
-function highlightMap(report) {
-  if (!map.getSource('cases')) return;
-  map.resize();
-  map.flyTo({ center: report.coordinates, zoom: 14, speed: 0.7 });
-  map.setPaintProperty('cases-layer', 'circle-stroke-width', [
-    'case',
-    ['==', ['get', 'id'], report.id],
-    3,
-    1.2,
-  ]);
+  document.body.classList.remove('case-open');
 }
 
 // ===== SORT UTILITY =====
@@ -770,31 +889,6 @@ function formatRelativeDate(isoString) {
   }
   const diffDays = Math.round(diffHours / 24);
   return formatter.format(diffDays, 'day');
-}
-
-// ===== GEOJSON TRANSFORM =====
-function toGeoJSON(items) {
-  return {
-    type: 'FeatureCollection',
-    features: items.map((report) => ({
-      type: 'Feature',
-      properties: {
-        id: report.id,
-        color: PRIORITY_COLORS[report.priority] ?? '#ea580c',
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: report.coordinates,
-      },
-    })),
-  };
-}
-
-// ===== MAP SOURCE REFRESH =====
-function refreshMapSource(data = getFilteredReports()) {
-  if (mapReady && map.getSource('cases')) {
-    map.getSource('cases').setData(toGeoJSON(data));
-  }
 }
 
 // ===== THREAD STATE ACCESS =====
@@ -891,8 +985,7 @@ function setReplyTarget(report, entry) {
   replyHint.textContent = `Replying to ${entry.author}`;
   replyHint.classList.remove('is-hidden');
   cancelReplyBtn.classList.remove('is-hidden');
-  commentField.placeholder = `Reply to ${entry.author}`;
-  commentField.focus();
+  openCommentModal();
 }
 
 // ===== REPLY TARGET CLEAR =====
@@ -901,7 +994,6 @@ function clearReplyTarget() {
   replyHint.textContent = '';
   replyHint.classList.add('is-hidden');
   cancelReplyBtn.classList.add('is-hidden');
-  commentField.placeholder = 'Leave a comment';
 }
 
 // ===== THREAD COUNT LABEL =====
@@ -987,7 +1079,6 @@ function updateCase(report, updates = {}, options = {}) {
   Object.assign(report, mergedUpdates);
   persistCaseUpdate(report.id, mergedUpdates);
   renderLists();
-  refreshMapSource();
   if (selectedCase && selectedCase.id === report.id) {
     renderCasePanel(report);
   }
@@ -1068,29 +1159,7 @@ function applyCaseStateOverrides() {
 
 // ===== ENGAGEMENT SEEDER =====
 function bootstrapEngagementSeeds(reportList) {
-  if (!CAN_USE_STORAGE) return;
-  if (Object.keys(engagementState).length) return;
-  reportList.slice(0, 3).forEach((report, index) => {
-    engagementState[report.id] = {
-      comments: [
-        {
-          id: `seed-comment-${report.id}`,
-          author: `${report.neighborhood} neighbor`,
-          text: `Checking in on the ${report.caseFocus?.toLowerCase() ?? 'reported issue'}.`,
-          createdAt: new Date(Date.now() - (index + 2) * 60 * 60 * 1000).toISOString(),
-        },
-      ],
-      notes: [
-        {
-          id: `seed-note-${report.id}`,
-          author: 'Coalition dispatcher',
-          text: `Coordinating response plan for ${report.caseFocus?.toLowerCase() ?? 'this case'}.`,
-          createdAt: new Date(Date.now() - (index + 1) * 45 * 60 * 1000).toISOString(),
-        },
-      ],
-    };
-  });
-  saveEngagementState();
+  hydrateEngagementThreads(reportList);
 }
 
 // ===== REPORT TRANSFORMER =====
@@ -1127,7 +1196,62 @@ function transformReport(record) {
     referredTo: '',
     collaborators: [],
     caseFocus: focus,
+    sourceNotes: record.notes ?? '',
   };
+}
+
+// ===== THREAD HYDRATION =====
+function hydrateEngagementThreads(reportList) {
+  let didChange = false;
+  reportList.forEach((report, index) => {
+    const threads = getCaseThreads(report.id);
+
+    const dataNote = report.sourceNotes?.trim();
+    if (dataNote) {
+      const dataId = `data-note-${report.id}`;
+      const hasDataNote = threads.notes.some((entry) => entry.id === dataId);
+      if (!hasDataNote) {
+        threads.notes.unshift({
+          id: dataId,
+          author: 'Dispatcher notes',
+          text: dataNote,
+          createdAt: report.reportedAt,
+        });
+        didChange = true;
+      }
+    }
+
+    const seedCommentId = `seed-comment-${report.id}`;
+    const shouldSeedComment = index < 3 && !threads.comments.some((entry) => entry.id === seedCommentId);
+    if (shouldSeedComment) {
+      threads.comments.push({
+        id: seedCommentId,
+        author: `${report.neighborhood} neighbor`,
+        text: `Checking in on the ${report.caseFocus?.toLowerCase() ?? 'reported issue'}.`,
+        createdAt: new Date(Date.now() - (index + 2) * 60 * 60 * 1000).toISOString(),
+      });
+      didChange = true;
+    }
+
+    const seedNoteId = `seed-note-${report.id}`;
+    const shouldSeedNote =
+      index < 3 &&
+      !dataNote &&
+      !threads.notes.some((entry) => entry.id === seedNoteId);
+    if (shouldSeedNote) {
+      threads.notes.push({
+        id: seedNoteId,
+        author: 'Coalition dispatcher',
+        text: `Coordinating response plan for ${report.caseFocus?.toLowerCase() ?? 'this case'}.`,
+        createdAt: new Date(Date.now() - (index + 1) * 45 * 60 * 1000).toISOString(),
+      });
+      didChange = true;
+    }
+  });
+
+  if (didChange) {
+    saveEngagementState();
+  }
 }
 
 // ===== CASE TITLE BUILDER =====
